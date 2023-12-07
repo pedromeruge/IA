@@ -1,0 +1,220 @@
+Encomendas a entregar:
+
+Encomenda 1
+Rua: "Rua Cruz de Pedra", 
+Peso:1,5kg, 
+Volume:50 cm^3, 
+Tempo: 
+Start_time: 2023-12-07 08:05
+End_time: 2023-12-07 17:15
+
+Encomenda 2
+Rua: “Rua de Moure”,
+Peso:2,5kg,
+Volume:70 cm^3
+Start_time: 2023-12-07 09:00
+End_time: 2023-12-07 19:00
+
+
+Encomenda 3
+Rua:”Travessa da Calçada”
+Peso:1kg
+Volume:20 cm^3
+Start_time: 2023-12-07 10:35
+End_time: 2023-12-07 17:15
+
+Encomenda 4
+Rua:”Rua da Feira”
+Peso:10kg
+Volume:150 cm^3
+Start_time: 2023-12-07 10:00
+End_time: 2023-12-07 14:00
+
+Encomenda 5
+Rua:”Largo da Madre de Deus”
+Peso:3,5kg
+Volume:50 cm^3
+Start_time: 2023-12-07 10:00
+End_time: 2023-12-07 15:00
+
+Encomenda 6
+Rua:”Largo da Granja”
+Peso:5,5kg
+Volume:80 cm^3
+Start_time: 2023-12-07 11:00
+End_time: 2023-12-07 13:00
+
+Encomenda 7
+Rua:”Rua Capitão Alberto de Matos”
+Peso:1,5kg
+Volume:55 cm^3
+Start_time: 2023-12-07 15:00
+End_time: 2023-12-08 16:00
+
+Encomenda 8
+Rua:”Rua da Bela Vista”
+Peso:6,5kg
+Volume:120 cm^3
+Start_time: 2023-12-07 16:00
+End_time: 2023-12-07 19:00
+
+Encomenda 9
+Rua:”Praceta de S.Tiago”
+Peso:2kg
+Volume:45 cm^3
+Start_time: 2023-12-07 18:00
+End_time: 2023-12-07 19:00
+
+Encomenda 10
+Rua:”Rua Cidade do Porto”
+Peso:6,5kg
+Volume:70 cm^3
+Start_time: 2023-12-07 17:30
+End_time: 2023-12-07 19:00
+
+Encomenda 10
+Rua:”Rua Manuel Tomaz”
+Peso:7,5kg
+Volume:80 cm^3
+Start_time: 2023-12-07 12:30
+End_time: 2023-12-07 19:00
+
+Encomenda 11
+Rua:”Rua Casa do Senhor”
+Peso:2kg
+Volume:30 cm^3
+Start_time: 2023-12-07 09:00
+End_time: 2023-12-07 12:00
+
+Encomenda 12
+Rua:”Rua do Visconde de Pindela”
+Peso:20kg
+Volume:200 cm^3
+Start_time: 2023-12-07 09:00
+End_time: 2023-12-07 19:00
+
+Encomenda 13
+Rua:”Rua do Portelo”
+Peso:8kg
+Volume:100 cm^3
+Start_time: 2023-12-07 09:30
+End_time: 2023-12-07 18:30
+
+Encomenda 14
+Rua:”Largo Barbosa e Castro”
+Peso:1kg
+Volume:20 cm^3
+Start_time: 2023-12-07 09:30
+End_time: 2023-12-07 18:30
+
+Encomenda 15
+Rua:”Rua Capitao Alberto de Matos”
+Peso:2kg
+Volume:30 cm^3
+Start_time: 2023-12-07 10:00
+End_time: 2023-12-07 15:30
+
+Encomenda 16
+Rua:”Largo de Maximinos”
+Peso:4,5kg
+Volume:75 cm^3
+Start_time: 2023-12-07 12:00
+End_time: 2023-12-07 16:30
+
+Encomenda 17
+Rua:”Rua de Calva”
+Peso:9,5kg
+Volume:180 cm^3
+Start_time: 2023-12-07 12:00
+End_time: 2023-12-07 18:30
+
+Encomenda 18
+Rua:”Rua de Calva”
+Peso:9,5kg
+Volume:180 cm^3
+Start_time: 2023-12-07 12:00
+End_time: 2023-12-07 18:30
+
+Encomenda 19
+Rua:”Rua de São Marcos”
+Peso:7,5kg
+Volume:100 cm^3
+Start_time: 2023-12-07 13:00
+End_time: 2023-12-07 18:30
+
+Encomenda 20
+Rua:”Rua da Violinha”
+Peso:9,5kg
+Volume:120 cm^3
+Start_time: 2023-12-07 14:30
+End_time: 2023-12-07 18:00
+
+Encomenda 21
+Rua:”Rua Maria da Fonte”
+Peso:1,5kg
+Volume:40 cm^3
+Start_time: 2023-12-07 13:30
+End_time: 2023-12-07 18:00
+
+Encomenda 22
+Rua:”Rua do Barral”
+Peso:1,5kg
+Volume:50 cm^3
+Start_time: 2023-12-07 11:30
+End_time: 2023-12-07 13:00
+
+Encomenda 23
+Rua:”Rua Manuel Peixoto”
+Peso:2,5kg
+Volume:55 cm^3
+Start_time: 2023-12-07 14:30
+End_time: 2023-12-07 17:00
+
+Encomenda 24
+Rua:”Praca do Municipio”
+Peso:40kg
+Volume:500 cm^3
+Start_time: 2023-12-07 13:00
+End_time: 2023-12-07 19:00
+
+Encomenda 25
+Rua:”Rua Joaquim Teixeira Serra”
+Peso:15,5kg
+Volume:250 cm^3
+Start_time: 2023-12-07 11:00
+End_time: 2023-12-07 17:00
+
+Encomenda 26
+Rua:”Praca do Condestavel”
+Peso:10,5kg
+Volume:200 cm^3
+Start_time: 2023-12-07 12:00
+End_time: 2023-12-07 17:00
+
+Encomenda 27
+Rua:”Rua Eca de Queiros”
+Peso:0,5kg
+Volume:15 cm^3
+Start_time: 2023-12-07 12:00
+End_time: 2023-12-07 15:00
+
+Encomenda 28
+Rua:”Rua do Polidesportivo”
+Peso:0,5kg
+Volume:20 cm^3
+Start_time: 2023-12-07 09:00
+End_time: 2023-12-07 11:00
+
+Encomenda 29
+Rua:”Rua Fotografo Arcelino”
+Peso:1,5kg
+Volume:40 cm^3
+Start_time: 2023-12-07 09:30
+End_time: 2023-12-07 14:30
+
+Encomenda 30
+Rua:”Rua do Castelo”
+Peso:15,5kg
+Volume:250 cm^3
+Start_time: 2023-12-07 10:30
+End_time: 2023-12-07 17:30
