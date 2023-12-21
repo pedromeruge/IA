@@ -21,11 +21,22 @@ def main():
 
     a = Algorithms()
 
-    delivery_locations = {"elvas","estremoz","evora","borba","anturas"}
+    #delivery_locations = {"elvas","estremoz","evora","borba","anturas"}
 
-    (path, custo) = a.greedy_tsp_with_timeframes(g,"elvas",delivery_locations)
+    #(path, custo) = a.greedy_tsp_with_timeframes(g,"elvas",delivery_locations)
 
-    print (path)
+    #print (path)
+    
+    goals = {"estremoz","evora","borba","anturas"}
+    
+    resultDFS = a.procura_DFS(g,"elvas",goals)
+    print (f'DFS: {resultDFS}')
+    
+    resultBFS = a.procura_BFS(g,"elvas",goals)
+    print (f'BFS: {resultBFS}')
+    
+    resultUniforme = a.procura_Uniforme(g,"elvas",goals)
+    print (f'Uniforme: {resultUniforme}')
 
 if __name__ == "__main__":
     main()
