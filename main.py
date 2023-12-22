@@ -1,7 +1,8 @@
 from Graph import Graph
 from Node import Node
 from Package import Package
-from Algorithms import Algorithms
+from AlgSemiInformed import AlgSemiInformed
+from AlgNonInformed import AlgNonInformed
 from BaseAlgorithms import BaseAlgorithms
 
 def main():
@@ -26,29 +27,28 @@ def main():
     g.add_edge(estremoz,borba,2)
     g.add_edge(evora,borba,2)
 
-    a = Algorithms()
-    b = BaseAlgorithms()
+    # nonInformed = AlgNonInformed()
+    semiInformed = AlgSemiInformed()
+    BaseAlgs = BaseAlgorithms()
     packages_locations = [p1,p2,p3,p4]
 
-    #delivery_locations = {"elvas","estremoz","evora","borba","anturas"}
+    #### procura nao informada ###############
 
-    #(path, custo) = a.greedy_tsp_with_timeframes(g,"elvas",delivery_locations)
-
-    #print (path)
+    # goals = set(package.getLocation() for package in packages_locations)
     
-    goals = set(package.getLocation() for package in packages_locations)
-    
-    # resultDFS = a.procura_DFS(g,"elvas",goals)
+    # resultDFS = nonInformed.procura_DFS(g,"elvas",goals)
     # print (f'DFS: {resultDFS}')
     
-    # resultBFS = a.procura_BFS(g,"elvas",goals)
+    # resultBFS = nonInformed.procura_BFS(g,"elvas",goals)
     # print (f'BFS: {resultBFS}')
     
-    # resultUniforme = a.procura_Uniforme(g,"elvas",goals)
+    # resultUniforme = nonInformed.procura_Uniforme(g,"elvas",goals)
     # print (f'Uniforme: {resultUniforme}')
 
-    path_func = b.procura_BFS # função que calcula caminho entre dois nodos
-    result = a.CalcFunc_with_timeframes(g,"elvas",packages_locations,path_func)
+    ### procura semi informada (mistura de dois algoritmos) ##########
+
+    path_func = BaseAlgs.procura_BFS # função que calcula caminho entre dois nodos
+    result = semiInformed.CalcFunc_with_timeframes(g,"elvas",packages_locations,path_func)
     if result is not None:
         (path,custo) = result
         print (path)
@@ -56,5 +56,9 @@ def main():
     else:
         print("Error calculating" + path_func.__name__)
         
+    ####### procura informada ###########
+    
+    #(path, custo) = a.greedy_tsp_with_timeframes(g,"elvas",delivery_locations)
+    
 if __name__ == "__main__":
     main()

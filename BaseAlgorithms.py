@@ -2,7 +2,6 @@ from Graph import Graph
 from Node import Node
 from Package import Package
 from queue import Queue
-import heapq
 
 class BaseAlgorithms:
     def __init__(self):
