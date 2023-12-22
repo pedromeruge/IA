@@ -3,7 +3,7 @@ from Node import Node
 from Package import Package
 
 # TOCONSIDER: se passar por nodo onde há encomenda, não entrega logo
-#               Posso meter a fazer isso, mas quando acrescentarmos delay de entregar pode impedir que se faça entrega no destino pretendido,
+#               Posso meter a fazer isso, mas quando acrescentarmos delay de entregar (entrega em si demora tempo / cliente pode só querer entrega a partir de x horas depois) pode impedir que se faça entrega no destino final para que se estava a ir
 #               Por isso não meti para já pelo menos
 class AlgInformed:
     def __init__(self):
@@ -34,8 +34,7 @@ class AlgInformed:
      #recebe grafo, 
      # nome do nodo inicial, 
      # set de nomes de locais de entrega, 
-     # tempo atual
-    def procura_greedy(self, graph, start, packages, node_positions):
+    def procura_informada(self, graph, start, packages, node_positions, path_func):
         
         # lista com nodos por visitar, ordenado por proximidade de data limite
         node_visit_order = self.calculate_heuristic_urgency(graph,packages)
@@ -58,7 +57,7 @@ class AlgInformed:
             next = node_visit_order.pop(0)
             # print("This iteration start: " + prev.getName() + ", end: " + next.getName())
             # print("Searching for path between " + prev.getName() + " and " + next.getName())
-            result = self.procura_greedy_Aux(graph,prev.getName(),next.getName())
+            result = path_func(graph,prev.getName(),next.getName())
             if result is not None :
                 (path,cost) = result # resultado de DFS
                 # print("result of " + path_func.__name__ + " iteration: "); print (path); print(cost)
@@ -75,7 +74,7 @@ class AlgInformed:
         print('Path does not exist!')
         return None
     
-    def procura_greedy_Aux(self, graph, start, end):
+    def procura_greedy(self, graph, start, end):
         # open_list é uma lista de nodos visitados, mas com vizinhos
         # closed_list é uma lista de nodos visitados
         # e todos os seus vizinhos também já o foram
@@ -97,7 +96,6 @@ class AlgInformed:
                 # distancia em relação ao próximo nodo a visitar
                 if n == None or self.calculate_node_heuristic(graph,v,end) < self.calculate_node_heuristic(graph,n,end):
                     n = v
-                # se prazo igual, desempatar com menor distância
 
             if n == None:
                 print('Cannot deliver package!')
@@ -130,6 +128,81 @@ class AlgInformed:
 
             # remover n da open_list e adiciona-lo à closed_list
             # porque todos os seus vizinhos foram inspecionados
+            open_list.remove(n)
+            closed_list.add(n)
+
+        print('Path does not exist!')
+        return None
+    
+    def procura_aStar(self, graph, start, end):
+        # open_list is a list of nodes which have been visited, but who's neighbors
+        # haven't all been inspected, starts off with the start node
+        # closed_list is a list of nodes which have been visited
+        # and who's neighbors have been inspected
+        open_list = {start}
+        closed_list = set([])
+
+        # g contains current distances from start_node to all other nodes
+        # the default value (if it's not found in the map) is +infinity
+        g = {}  ##  g é apra substiruir pelo peso  ???
+
+        g[start] = 0
+
+        # parents contains an adjacency map of all nodes
+        parents = {}
+        parents[start] = start
+        #n = None
+        while len(open_list) > 0:
+            # find a node with the lowest value of f() - evaluation function
+            n = None
+
+            # find a node with the lowest value of f() - evaluation function
+            for v in open_list:
+                ##if n == None or g[v] + self.getH(v) < g[n] + self.getH(n):  # heuristica ver.....
+                if n == None or g[v] + self.calculate_node_heuristic(graph,v,end) < g[n] + self.calculate_node_heuristic(graph,n,end):  # heuristica ver.....
+                    n = v
+            if n == None:
+                print('Cannot deliver package!')
+                return None
+
+            # if the current node is the stop_node
+            # then we begin reconstructin the path from it to the start_node
+            if n == end:
+                reconst_path = []
+
+                while parents[n] != n:
+                    reconst_path.append(n)
+                    n = parents[n]
+
+                reconst_path.append(start)
+
+                reconst_path.reverse()
+
+                return (reconst_path, graph.calcula_custo(reconst_path))
+
+            # for all neighbors of the current node do
+            for (m, weight) in graph.getNeighbours(n):  # definir função getneighbours  tem de ter um par nodo peso
+                # if the current node isn't in both open_list and closed_list
+                # add it to open_list and note n as it's parent
+                if m not in open_list and m not in closed_list:
+                    open_list.add(m)
+                    parents[m] = n
+                    g[m] = g[n] + weight
+
+                # otherwise, check if it's quicker to first visit n, then m
+                # and if it is, update parent data and g data
+                # and if the node was in the closed_list, move it to open_list
+                else:
+                    if g[m] > g[n] + weight:
+                        g[m] = g[n] + weight
+                        parents[m] = n
+
+                        if m in closed_list:
+                            closed_list.remove(m)
+                            open_list.add(m)
+
+            # remove n from the open_list, and add it to closed_list
+            # because all of his neighbors were inspected
             open_list.remove(n)
             closed_list.add(n)
 

@@ -72,7 +72,7 @@ def main():
     # para já fiz assim, mais tarde devia ser atribuir valores razoáveis à mão para cada nodo
 
     informed = AlgInformed()
-    result = informed.procura_greedy(g,"elvas",packages_locations, node_positions)
+    result = informed.procura_informada(g,"elvas",packages_locations, node_positions, informed.procura_aStar)
     if result is not None:
         (path,custo) = result
         print (path)
