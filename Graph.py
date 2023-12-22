@@ -22,7 +22,7 @@ class Graph:
         self.m_nodes = [] # lista de todos os nodos do grafo
         self.m_directed = directed
         self.m_graph = {}  # dicionario para armazenar os nodos e arestas
-
+        self.m_h = {} # dicionario para armazenar as heuristicas para cada nodo -< pesquisa informada
     #############
     #    escrever o grafo como string
     #############
@@ -76,7 +76,14 @@ class Graph:
         if not self.m_directed:
               self.m_graph[node2].append((node1, dist))
 
+    def add_heuristica(self, n, valor):
+        n1 = Node(n)
+        if n1 in self.m_nodes:
+            self.m_h[n] = valor
 
+    def get_heuristica(self,n):
+        return self.m_h[n]
+    
     def getSpecificNode(self,name):
         return self.m_graph[name]
     
@@ -84,6 +91,9 @@ class Graph:
     def getNodes(self):
         return self.m_nodes
 
+    def getNumberOfNodes(self):
+        return len(self.m_nodes)
+    
     def getNeighbours(self,n):
         neighbours = []
         node = Node(n)

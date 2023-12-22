@@ -3,7 +3,9 @@ from Node import Node
 from Package import Package
 from AlgSemiInformed import AlgSemiInformed
 from AlgNonInformed import AlgNonInformed
+from AlgInformed import AlgInformed
 from BaseAlgorithms import BaseAlgorithms
+import random
 
 def main():
     elvas = Node("elvas")
@@ -27,13 +29,11 @@ def main():
     g.add_edge(estremoz,borba,2)
     g.add_edge(evora,borba,2)
 
-    # nonInformed = AlgNonInformed()
-    semiInformed = AlgSemiInformed()
-    BaseAlgs = BaseAlgorithms()
     packages_locations = [p1,p2,p3,p4]
 
     #### procura nao informada ###############
 
+    # nonInformed = AlgNonInformed()
     # goals = set(package.getLocation() for package in packages_locations)
     
     # resultDFS = nonInformed.procura_DFS(g,"elvas",goals)
@@ -47,18 +47,38 @@ def main():
 
     ### procura semi informada (mistura de dois algoritmos) ##########
 
-    path_func = BaseAlgs.procura_BFS # função que calcula caminho entre dois nodos
-    result = semiInformed.CalcFunc_with_timeframes(g,"elvas",packages_locations,path_func)
+    # semiInformed = AlgSemiInformed()
+    # BaseAlgs = BaseAlgorithms()
+
+    # path_func = BaseAlgs.procura_BFS # função que calcula caminho entre dois nodos
+    # result = semiInformed.CalcFunc_with_timeframes(g,"elvas",packages_locations,path_func)
+    # if result is not None:
+    #     (path,custo) = result
+    #     print (path)
+    #     print (custo)
+    # else:
+    #     print("Error calculating" + path_func.__name__)
+        
+    ####### procura informada ###########
+    node_positions = []
+    node_positions.append(("elvas",5,10))
+    node_positions.append(("estremoz",5,8))
+    node_positions.append(("anturas",5,2))
+    node_positions.append(("evora",4,9))
+    node_positions.append(("borba",6,7))
+    
+    #for node in g.getNodes():   
+    #node_positions.append((node.getName(),random.randint(1,20), random.randint(1,20))) # obter lista de posições (x,y) para cada nodo
+    # para já fiz assim, mais tarde devia ser atribuir valores razoáveis à mão para cada nodo
+
+    informed = AlgInformed()
+    result = informed.procura_greedy(g,"elvas",packages_locations, node_positions)
     if result is not None:
         (path,custo) = result
         print (path)
         print (custo)
     else:
-        print("Error calculating" + path_func.__name__)
+        print("Error calculating greedy")
         
-    ####### procura informada ###########
-    
-    #(path, custo) = a.greedy_tsp_with_timeframes(g,"elvas",delivery_locations)
-    
 if __name__ == "__main__":
     main()

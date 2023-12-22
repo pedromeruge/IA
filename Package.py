@@ -5,7 +5,7 @@ class Package:
     def __init__(self, location, start_time="2023-12-01 00:00", end_time="2023-12-01 00:00"):     #  construtor do nodo....."
         self.m_location = location
         self.m_start_time = datetime.strptime(start_time, "%Y-%m-%d %H:%M")
-        self.m_end_time = datetime.strptime(start_time, "%Y-%m-%d %H:%M")
+        self.m_end_time = datetime.strptime(end_time, "%Y-%m-%d %H:%M")
 
     def __str__(self):
         return "package for " + self.m_location
