@@ -77,6 +77,9 @@ class Graph:
               self.m_graph[node2].append((node1, dist))
 
 
+    def getSpecificNode(self,name):
+        return self.m_graph[name]
+    
     # devolver nodos
     def getNodes(self):
         return self.m_nodes
