@@ -90,7 +90,7 @@ def main():
     node_positions.append(("borba",6,7))
 
     informed2 = AlgInformed2()
-    result = informed2.procura_greedy(g,"elvas",packages_locations, node_positions)
+    result = informed2.procura_informada(g,"elvas",packages_locations, node_positions, informed2.procura_aStar)
     if result is not None:
         (path,custo) = result
         print (path)

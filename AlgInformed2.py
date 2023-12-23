@@ -44,7 +44,7 @@ class AlgInformed2:
     #recebe grafo, 
     # nome do nodo inicial, 
     # set de nomes de locais de entrega, 
-    def procura_greedy(self, graph, start, packages, node_positions):
+    def procura_informada(self, graph, start, packages, node_positions, path_func):
 
         # atualiza grafo com as posições para cada nodo
         self.add_positions_to_nodes(graph,node_positions)
@@ -60,7 +60,7 @@ class AlgInformed2:
             prev = next # proximo nodo de que se vai partir
             print("This iteration start: " + prev)
 
-            result = self.procura_greedy_aux(graph,prev,to_deliver,currTime)
+            result = path_func(graph,prev,to_deliver,currTime)
             if result is not None :
                 (path,cost) = result
                 # print("result of " + path_func.__name__ + " iteration: "); print (path); print(cost)
@@ -80,7 +80,7 @@ class AlgInformed2:
         print('Path does not exist!')
         return None
     
-    def procura_greedy_aux(self, graph, start, to_deliver, currTime):
+    def procura_greedy(self, graph, start, to_deliver, currTime):
 
         open_list = set([start])
         closed_list = set([])
@@ -136,7 +136,7 @@ class AlgInformed2:
         print('Path does not exist!')
         return None
     
-    def procura_aStar(self, graph, start, end):
+    def procura_aStar(self, graph, start, to_deliver, currTime):
         # open_list is a list of nodes which have been visited, but who's neighbors
         # haven't all been inspected, starts off with the start node
         # closed_list is a list of nodes which have been visited
@@ -161,7 +161,7 @@ class AlgInformed2:
             # find a node with the lowest value of f() - evaluation function
             for v in open_list:
                 ##if n == None or g[v] + self.getH(v) < g[n] + self.getH(n):  # heuristica ver.....
-                if n == None or g[v] + self.calculate_node_heuristic(graph,v,end) < g[n] + self.calculate_node_heuristic(graph,n,end):  # heuristica ver.....
+                if n == None or g[v] + self.calculate_node_heuristic(graph,v,to_deliver,currTime) < g[n] + self.calculate_node_heuristic(graph,v,to_deliver,currTime):  # heuristica ver.....
                     n = v
             if n == None:
                 print('Cannot deliver package!')
@@ -169,7 +169,7 @@ class AlgInformed2:
 
             # if the current node is the stop_node
             # then we begin reconstructin the path from it to the start_node
-            if n == end:
+            if n in to_deliver:
                 reconst_path = []
 
                 while parents[n] != n:
