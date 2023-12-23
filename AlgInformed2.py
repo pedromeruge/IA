@@ -11,9 +11,9 @@ class AlgInformed2:
         print("Calculating Informed")
 
     def add_positions_to_nodes(self,graph,node_positions):
-        for (location,x,y) in node_positions:
-            graph.add_heuristica(location,(x,y))
-            print ("Location: " + location + " (" + str(x) + "," + str(y) + ")")
+        for location, coords in node_positions.items():
+            graph.add_heuristica(location, coords)
+            print("Location: " + location + " (" + str(coords[0]) + "," + str(coords[1]) + ")")
         
     #calcular heurística de nodo baseada em:
     #   dist (pos atual, pos package mais perto) +
