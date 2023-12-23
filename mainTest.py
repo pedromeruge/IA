@@ -90,7 +90,10 @@ def main():
     node_positions["borba"] = (6,7)
 
     informed2 = AlgInformed2()
-    result = informed2.procura_informada(g,"elvas",packages_locations, node_positions, informed2.procura_aStar)
+
+    packages = {package.m_location: package for package in packages_locations} # map dos pacotes a entregar, location para respetivo pacote (acessos rápidos)
+        
+    result = informed2.procura_informada(g,"elvas",packages, node_positions, informed2.procura_aStar)
     if result is not None:
         (path,custo) = result
         print (path)

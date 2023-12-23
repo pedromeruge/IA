@@ -13,7 +13,7 @@ class AlgInformed2:
     def add_positions_to_nodes(self,graph,node_positions):
         for location, coords in node_positions.items():
             graph.add_heuristica(location, coords)
-            print("Location: " + location + " (" + str(coords[0]) + "," + str(coords[1]) + ")")
+            # print("Location: " + location + " (" + str(coords[0]) + "," + str(coords[1]) + ")")
         
     #calcular heurística de nodo baseada em:
     #   dist (pos atual, pos package mais perto) +
@@ -28,12 +28,12 @@ class AlgInformed2:
             place = package.m_location
             startTime = package.m_start_time
             endTime = package.m_end_time
-            print(f"package left: {place}, {startTime},{endTime}")
+            # print(f"package left: {place}, {startTime},{endTime}")
             (endX,endY) = graph.get_heuristica(place)
             temp_res += ((endX-currX)**2 + (endY-currY)**2)
-            print (f"Geo diff {temp_res}")
+            # print (f"Geo diff {temp_res}")
             temp_res += (endTime - currTime).total_seconds() / 60 # time diff in minutes
-            print (f"After time {temp_res}")
+            # print (f"After time {temp_res}")
             # temp_res += (currTime - startTime).total_seconds() / 60 # time diff in minutes
             if (temp_res < final_res):
                 final_res = temp_res
@@ -49,7 +49,7 @@ class AlgInformed2:
         # atualiza grafo com as posições para cada nodo
         self.add_positions_to_nodes(graph,node_positions)
 
-        to_deliver = {package.m_location: package for package in packages} # map dos pacotes a entregar, location para respetivo pacote (acessos rápidos)
+        to_deliver = packages.copy()
         currTime = datetime.strptime("2023-12-07 08:00", "%Y-%m-%d %H:%M")
         errorFlag = False
         finalPath = [start]
