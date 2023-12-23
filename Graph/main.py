@@ -3,7 +3,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 def main():
-    csv_file_path = './edges.csv'
+    csv_file_path = 'Graph/edges.csv'
     df = pd.read_csv(csv_file_path)
 
     G = nx.Graph()

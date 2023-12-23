@@ -1,83 +1,87 @@
 from Graph import Graph
 from Node import Node
 from Package import Package
+from datetime import datetime
 
 # TOCONSIDER: se passar por nodo onde há encomenda, não entrega logo
 #               Posso meter a fazer isso, mas quando acrescentarmos delay de entregar (entrega em si demora tempo / cliente pode só querer entrega a partir de x horas depois) pode impedir que se faça entrega no destino final para que se estava a ir
 #               Por isso não meti para já pelo menos
-class AlgInformed:
+class AlgInformed2:
     def __init__(self):
         print("Calculating Informed")
 
-    # retorna set ordenado com ordem de visita de packages, baseada no tempo limite de entrega mais próximo
-    def calculate_heuristic_urgency(self, graph, packages):
-        node_visit_order = []
-        sorted_packages = sorted(packages, key=Package.getEndTime) # sort packages by delivery urgency
-        for package in sorted_packages:
-            n1 = graph.get_node_by_name(package.getLocation())
-            node_visit_order.append(n1)
-        return node_visit_order
-    
     def add_positions_to_nodes(self,graph,node_positions):
         for (location,x,y) in node_positions:
             graph.add_heuristica(location,(x,y))
             print ("Location: " + location + " (" + str(x) + "," + str(y) + ")")
         
-    #calcular heurística de nodo baseada na dist de nodo atual com nodo pretendido
-    def calculate_node_heuristic(self, graph, curr, end):
-        (currX,currY) = graph.get_heuristica(curr)
-        (endX,endY) = graph.get_heuristica(end)
-        res = ((endX-currX)**2 + (endY-currY)**2)
-        return res
+    #calcular heurística de nodo baseada em:
+    #   dist (pos atual, pos package mais perto) +
+    #   diff(tempo atual, tempo limite) (preciso, porque nodos vizinhos podem estar a distância diferente do nodo atual, resultando em tempos diferentes lá) +
+    #   diff(tempo inicial, tempo atual) (se estiver muito longe do início, n vale a pena ir lá)
+    #   POR CONSIDERAR: diff(tmepo inicial, tempo final) ??
+    def calculate_node_heuristic(self, graph, currNode, packages_left, currTime):
+        (currX,currY) = graph.get_heuristica(currNode)
+        final_res = float('inf') # guardar a heurística mínima, para todos os packages a ser entregues!!
+        temp_res = 0 # em relação a cada package calcular heurística
+        for package in packages_left.values():
+            place = package.m_location
+            startTime = package.m_start_time
+            endTime = package.m_end_time
+            print(f"package left: {place}, {startTime},{endTime}")
+            (endX,endY) = graph.get_heuristica(place)
+            temp_res += ((endX-currX)**2 + (endY-currY)**2)
+            print (f"Geo diff {temp_res}")
+            temp_res += (endTime - currTime).total_seconds() / 60 # time diff in minutes
+            print (f"After time {temp_res}")
+            # temp_res += (currTime - startTime).total_seconds() / 60 # time diff in minutes
+            if (temp_res < final_res):
+                final_res = temp_res
+        print ("Heuristic obtained: " + str(final_res))
+        return final_res
     
-     # Args:
-     #recebe grafo, 
-     # nome do nodo inicial, 
-     # set de nomes de locais de entrega, 
-    def procura_informada(self, graph, start, packages, node_positions, path_func):
-        
-        # lista com nodos por visitar, ordenado por proximidade de data limite
-        node_visit_order = self.calculate_heuristic_urgency(graph,packages)
-        for node in node_visit_order:
-            print (node)
+    # Args:
+    #recebe grafo, 
+    # nome do nodo inicial, 
+    # set de nomes de locais de entrega, 
+    def procura_greedy(self, graph, start, packages, node_positions):
 
         # atualiza grafo com as posições para cada nodo
         self.add_positions_to_nodes(graph,node_positions)
 
+        to_deliver = {package.m_location: package for package in packages} # map dos pacotes a entregar, location para respetivo pacote (acessos rápidos)
+        currTime = datetime.strptime("2023-12-07 08:00", "%Y-%m-%d %H:%M")
         errorFlag = False
         finalPath = [start]
         totalCost = 0
-        next = Node(start)
+        next = start
 
-        while len(node_visit_order) > 0 and not errorFlag:
-            # print("Array before iteration decision: ")
-            # for node in node_visit_order:
-            #     print(node)
-            prev = next
-            next = node_visit_order.pop(0)
-            # print("This iteration start: " + prev.getName() + ", end: " + next.getName())
-            # print("Searching for path between " + prev.getName() + " and " + next.getName())
-            result = path_func(graph,prev.getName(),next.getName())
+        while len(to_deliver) > 0 and not errorFlag:
+            prev = next # proximo nodo de que se vai partir
+            print("This iteration start: " + prev)
+
+            result = self.procura_greedy_aux(graph,prev,to_deliver,currTime)
             if result is not None :
-                (path,cost) = result # resultado de DFS
+                (path,cost) = result
                 # print("result of " + path_func.__name__ + " iteration: "); print (path); print(cost)
                 path.pop(0) # removemos a primeira posição do path obtido, porque já consta na lista final
                 finalPath.extend(path)
                 totalCost += cost
-                # node_visit_order.pop(0) # remover primeiro nodo da lista, continuar a procura
+                next = path[-1] # próximo nodo em que se começa será o último nodo a que se chegou na iteração anterior
+
+                del to_deliver[next] # remover dos pacotes a entregar o pacote atual
+
             else :
                 errorFlag = True
 
-        if (len(node_visit_order) == 0) and not errorFlag: # necessário o not errorFlag??
+        if (len(to_deliver) == 0) and not errorFlag: # necessário o not errorFlag??
             return (finalPath,totalCost)
         
         print('Path does not exist!')
         return None
     
-    def procura_greedy(self, graph, start, end):
-        # open_list é uma lista de nodos visitados, mas com vizinhos
-        # closed_list é uma lista de nodos visitados
-        # e todos os seus vizinhos também já o foram
+    def procura_greedy_aux(self, graph, start, to_deliver, currTime):
+
         open_list = set([start])
         closed_list = set([])
 
@@ -93,18 +97,17 @@ class AlgInformed:
             for v in open_list:
 
                 # distancia em relação ao próximo nodo a visitar
-                if n == None or self.calculate_node_heuristic(graph,v,end) < self.calculate_node_heuristic(graph,n,end):
+                if n == None or self.calculate_node_heuristic(graph,v,to_deliver,currTime) < self.calculate_node_heuristic(graph,n,to_deliver,currTime):
                     n = v
 
             if n == None:
                 print('Cannot deliver package!')
                 return None
 
-            # print("picked",n)
             # se o nodo corrente é o último a entregar
             # reconstruir o caminho a partir desse nodo até ao start
             # seguindo o antecessor
-            if n == end:
+            if n in to_deliver:
                 reconst_path = []
 
                 while parents[n] != n:
