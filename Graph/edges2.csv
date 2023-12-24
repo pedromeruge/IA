@@ -1,108 +1,108 @@
 Node1,Node2,Weight
-Rua da Esperanca, Rua do Progresso, 15
-Rua da Esperanca, Avenida da Paz, 8
-Rua da Esperanca, Rua do Bairro, 12
-Rua do Progresso, Rua da Esperanca, 15
-Rua do Progresso, Avenida da Paz, 10
-Rua do Progresso, Rua do Bairro, 18
-Avenida da Paz, Rua da Esperanca, 8
-Avenida da Paz, Rua do Progresso, 10
-Avenida da Paz, Rua do Bairro, 2
-Rua do Bairro, Rua da Esperanca, 12
-Rua do Bairro, Rua do Progresso, 18
-Rua do Bairro, Avenida da Paz, 25
-Rua da Felicidade, Avenida Central, 20
-Rua da Felicidade, Praça da Liberdade, 15
-Rua da Felicidade, Rua das Flores, 12
-Avenida Central, Rua da Felicidade, 20
-Avenida Central, Praça da Liberdade, 22
-Avenida Central, Rua das Flores, 28
-Praça da Liberdade, Rua da Felicidade, 15
-Praça da Liberdade, Avenida Central, 22
-Praça da Liberdade, Rua das Flores, 10
-Rua das Flores, Rua da Felicidade, 12
-Rua das Flores, Avenida Central, 28
-Rua das Flores, Praça da Liberdade, 10
-Rua do Sol, Avenida do Mar, 14
-Rua do Sol, Rua dos Amores, 8
-Rua do Sol, Praça das Estrelas, 10
-Avenida do Mar, Rua do Sol, 14
-Avenida do Mar, Rua dos Amores, 10
-Avenida do Mar, Praça das Estrelas, 18
-Rua dos Amores, Rua do Sol, 8
-Rua dos Amores, Avenida do Mar, 10
-Rua dos Amores, Praça das Estrelas, 15
-Praça das Estrelas, Rua do Sol, 10
-Praça das Estrelas, Avenida do Mar, 18
-Praça das Estrelas, Rua dos Amores, 15
-Rua da Lua, Rua da Esperanca, 14
-Rua da Lua, Rua do Progresso, 12
-Rua da Lua, Avenida da Paz, 10
-Avenida Central, Rua da Esperanca, 18
-Avenida Central, Rua do Progresso, 25
-Avenida Central, Avenida da Paz, 12
-Avenida Central, Rua da Felicidade, 15
-Avenida Central, Praça da Liberdade, 8
-Avenida Central, Rua das Flores, 22
-Avenida Central, Rua do Sol, 14
-Avenida Central, Avenida do Mar, 16
-Avenida Central, Rua dos Amores, 10
-Rua da Esperanca, Rua do Sol, 10
-Rua da Esperanca, Avenida do Mar, 18
-Rua da Esperanca, Rua dos Amores, 12
-Rua da Esperanca, Praça das Estrelas, 15
-Rua da Esperanca, Rua da Lua, 14
-Rua Nova, Avenida Central, 19
-Rua Nova, Rua da Esperança, 5
-Rua Nova, Rua do Comércio, 18
-Avenida Larga, Rua da Esperança, 15
-Avenida Larga, Avenida Central, 3
-Avenida Larga, Largo da Madre de Deus, 23
-Travessa do Bairro, Rua da Esperança, 3
-Travessa do Bairro, Rua do Comércio, 2
-Travessa do Bairro, Rua Nova, 4
-Largo do Mercado, Largo da Madre de Deus, 2
-Largo do Mercado, Rua Nova, 14
-Largo do Mercado, Avenida Larga, 3
-Rua do Porto, Rua da Esperança, 3
-Rua do Porto, Avenida Central, 13
-Rua do Porto, Travessa do Bairro, 2
-Avenida Nova, Rua do Comércio, 11
-Avenida Nova, Largo do Mercado, 2
-Avenida Nova, Rua do Porto, 3
-Rua do Campo, Rua da Esperança, 15
-Rua do Campo, Rua Nova, 4
-Rua do Campo, Largo do Mercado, 3
-Avenida Velha, Rua do Comércio, 28
-Avenida Velha, Avenida Nova, 2
-Avenida Velha, Largo do Mercado, 3
-Rua da Alegria, Avenida Larga, 5
-Rua da Alegria, Rua da Felicidade, 6
-Rua da Alegria, Praça da Liberdade, 4
-Rua das Flores, Avenida Larga, 9
-Rua das Flores, Rua da Felicidade, 18
-Rua das Flores, Praça da Liberdade, 5
-Travessa da Paz, Avenida Larga, 15
-Travessa da Paz, Rua da Felicidade, 12
-Travessa da Paz, Praça da Liberdade, 5
-Avenida da Paz, Avenida Larga, 12
-Avenida da Paz, Rua da Felicidade, 5
-Avenida da Paz, Praça da Liberdade, 21
-Rua do Amor, Avenida Larga, 4
-Rua do Amor, Rua da Felicidade, 2
-Rua do Amor, Praça da Liberdade, 6
-Rua da Serenidade, Rua do Porto, 14
-Rua da Serenidade, Avenida da Paz, 8
-Rua da Serenidade, Travessa do Bairro, 6
-Avenida do Progresso, Rua do Porto, 10
-Avenida do Progresso, Avenida da Paz, 12
-Avenida do Progresso, Travessa do Bairro, 28
-Travessa da Harmonia, Rua do Porto, 15
-Travessa da Harmonia, Avenida da Paz, 14
-Travessa da Harmonia, Travessa do Bairro, 7
-Rua da União, Rua do Porto, 12
-Rua da União, Avenida da Paz, 14
-Rua da União, Travessa do Bairro, 9
-Avenida da Prosperidade, Rua do Porto, 9
-Avenida da Prosperidade, Avenida da Paz, 7
-Avenida da Prosperidade, Travessa do Bairro, 12
+Rua da Esperanca, Rua do Progresso, 1500
+Rua da Esperanca, Avenida da Paz, 800
+Rua da Esperanca, Rua do Bairro, 1200
+Rua do Progresso, Rua da Esperanca, 1500
+Rua do Progresso, Avenida da Paz, 1000
+Rua do Progresso, Rua do Bairro, 1800
+Avenida da Paz, Rua da Esperanca, 800
+Avenida da Paz, Rua do Progresso, 1000
+Avenida da Paz, Rua do Bairro, 200
+Rua do Bairro, Rua da Esperanca, 1200
+Rua do Bairro, Rua do Progresso, 1800
+Rua do Bairro, Avenida da Paz, 2500
+Rua da Felicidade, Avenida Central, 2000
+Rua da Felicidade, Praça da Liberdade, 1500
+Rua da Felicidade, Rua das Flores, 1200
+Avenida Central, Rua da Felicidade, 2000
+Avenida Central, Praça da Liberdade, 2200
+Avenida Central, Rua das Flores, 2800
+Praça da Liberdade, Rua da Felicidade, 1500
+Praça da Liberdade, Avenida Central, 2200
+Praça da Liberdade, Rua das Flores, 1000
+Rua das Flores, Rua da Felicidade, 1200
+Rua das Flores, Avenida Central, 2800
+Rua das Flores, Praça da Liberdade, 1000
+Rua do Sol, Avenida do Mar, 1400
+Rua do Sol, Rua dos Amores, 800
+Rua do Sol, Praça das Estrelas, 1000
+Avenida do Mar, Rua do Sol, 1400
+Avenida do Mar, Rua dos Amores, 1000
+Avenida do Mar, Praça das Estrelas, 1800
+Rua dos Amores, Rua do Sol, 800
+Rua dos Amores, Avenida do Mar, 1000
+Rua dos Amores, Praça das Estrelas, 1500
+Praça das Estrelas, Rua do Sol, 1000
+Praça das Estrelas, Avenida do Mar, 1800
+Praça das Estrelas, Rua dos Amores, 1500
+Rua da Lua, Rua da Esperanca, 1400
+Rua da Lua, Rua do Progresso, 1200
+Rua da Lua, Avenida da Paz, 1000
+Avenida Central, Rua da Esperanca, 1800
+Avenida Central, Rua do Progresso, 2500
+Avenida Central, Avenida da Paz, 1200
+Avenida Central, Rua da Felicidade, 1500
+Avenida Central, Praça da Liberdade, 800
+Avenida Central, Rua das Flores, 2200
+Avenida Central, Rua do Sol, 1400
+Avenida Central, Avenida do Mar, 1600
+Avenida Central, Rua dos Amores, 1000
+Rua da Esperanca, Rua do Sol, 1000
+Rua da Esperanca, Avenida do Mar, 1800
+Rua da Esperanca, Rua dos Amores, 1200
+Rua da Esperanca, Praça das Estrelas, 1500
+Rua da Esperanca, Rua da Lua, 1400
+Rua Nova, Avenida Central, 1900
+Rua Nova, Rua da Esperança, 500
+Rua Nova, Rua do Comércio, 1800
+Avenida Larga, Rua da Esperança, 1500
+Avenida Larga, Avenida Central, 300
+Avenida Larga, Largo da Madre de Deus, 2300
+Travessa do Bairro, Rua da Esperança, 300
+Travessa do Bairro, Rua do Comércio, 200
+Travessa do Bairro, Rua Nova, 400
+Largo do Mercado, Largo da Madre de Deus, 200
+Largo do Mercado, Rua Nova, 1400
+Largo do Mercado, Avenida Larga, 300
+Rua do Porto, Rua da Esperança, 300
+Rua do Porto, Avenida Central, 1300
+Rua do Porto, Travessa do Bairro, 200
+Avenida Nova, Rua do Comércio, 1100
+Avenida Nova, Largo do Mercado, 200
+Avenida Nova, Rua do Porto, 300
+Rua do Campo, Rua da Esperança, 1500
+Rua do Campo, Rua Nova, 400
+Rua do Campo, Largo do Mercado, 300
+Avenida Velha, Rua do Comércio, 2800
+Avenida Velha, Avenida Nova, 200
+Avenida Velha, Largo do Mercado, 300
+Rua da Alegria, Avenida Larga, 500
+Rua da Alegria, Rua da Felicidade, 600
+Rua da Alegria, Praça da Liberdade, 400
+Rua das Flores, Avenida Larga, 900
+Rua das Flores, Rua da Felicidade, 1800
+Rua das Flores, Praça da Liberdade, 500
+Travessa da Paz, Avenida Larga, 1500
+Travessa da Paz, Rua da Felicidade, 1200
+Travessa da Paz, Praça da Liberdade, 500
+Avenida da Paz, Avenida Larga, 1200
+Avenida da Paz, Rua da Felicidade, 500
+Avenida da Paz, Praça da Liberdade, 2100
+Rua do Amor, Avenida Larga, 400
+Rua do Amor, Rua da Felicidade, 200
+Rua do Amor, Praça da Liberdade, 600
+Rua da Serenidade, Rua do Porto, 1400
+Rua da Serenidade, Avenida da Paz, 800
+Rua da Serenidade, Travessa do Bairro, 600
+Avenida do Progresso, Rua do Porto, 1000
+Avenida do Progresso, Avenida da Paz, 1200
+Avenida do Progresso, Travessa do Bairro, 2800
+Travessa da Harmonia, Rua do Porto, 1500
+Travessa da Harmonia, Avenida da Paz, 1400
+Travessa da Harmonia, Travessa do Bairro, 700
+Rua da União, Rua do Porto, 1200
+Rua da União, Avenida da Paz, 1400
+Rua da União, Travessa do Bairro, 900
+Avenida da Prosperidade, Rua do Porto, 900
+Avenida da Prosperidade, Avenida da Paz, 700
+Avenida da Prosperidade, Travessa do Bairro, 120

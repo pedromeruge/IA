@@ -51,8 +51,8 @@ class Parser:
             n2 = Node(node2)
             my_graph.add_edge(n1,n2, weight)
 
-        print("Number of nodes:", G.number_of_nodes())
-        print("Number of edges:", G.number_of_edges())
+        # print("Number of nodes:", G.number_of_nodes())
+        # print("Number of edges:", G.number_of_edges())
 
         #guardar Grafo lido de ficheiro
         self.m_G = G

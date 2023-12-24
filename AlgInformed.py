@@ -6,22 +6,20 @@ from Package import Package
 #               Posso meter a fazer isso, mas quando acrescentarmos delay de entregar (entrega em si demora tempo / cliente pode só querer entrega a partir de x horas depois) pode impedir que se faça entrega no destino final para que se estava a ir
 #               Por isso não meti para já pelo menos
 class AlgInformed:
-    def __init__(self):
-        print("Calculating Informed")
 
     # retorna set ordenado com ordem de visita de packages, baseada no tempo limite de entrega mais próximo
     def calculate_heuristic_urgency(self, graph, packages):
         node_visit_order = []
-        sorted_packages = sorted(packages, key=Package.getEndTime) # sort packages by delivery urgency
+        sorted_packages = sorted(packages.values(), key=Package.getEndTime) # sort packages by delivery urgency
         for package in sorted_packages:
             n1 = graph.get_node_by_name(package.getLocation())
             node_visit_order.append(n1)
         return node_visit_order
     
     def add_positions_to_nodes(self,graph,node_positions):
-        for (location,x,y) in node_positions:
-            graph.add_heuristica(location,(x,y))
-            print ("Location: " + location + " (" + str(x) + "," + str(y) + ")")
+        for location, coords in node_positions.items():
+            graph.add_heuristica(location, coords)
+            # print("Location: " + location + " (" + str(coords[0]) + "," + str(coords[1]) + ")")
         
     #calcular heurística de nodo baseada na dist de nodo atual com nodo pretendido
     def calculate_node_heuristic(self, graph, curr, end):
@@ -34,20 +32,20 @@ class AlgInformed:
      #recebe grafo, 
      # nome do nodo inicial, 
      # set de nomes de locais de entrega, 
-    def procura_informada(self, graph, start, packages, node_positions, path_func):
+    def procura_informada(self, graph, startPlace, startTime, packages, node_positions, stats, path_func):
         
         # lista com nodos por visitar, ordenado por proximidade de data limite
         node_visit_order = self.calculate_heuristic_urgency(graph,packages)
-        for node in node_visit_order:
-            print (node)
+        # for node in node_visit_order:
+        #     print (node)
 
         # atualiza grafo com as posições para cada nodo
         self.add_positions_to_nodes(graph,node_positions)
 
         errorFlag = False
-        finalPath = [start]
+        finalPath = [startPlace]
         totalCost = 0
-        next = Node(start)
+        next = Node(startPlace)
 
         while len(node_visit_order) > 0 and not errorFlag:
             # print("Array before iteration decision: ")

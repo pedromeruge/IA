@@ -7,8 +7,6 @@ from datetime import datetime
 #               Posso meter a fazer isso, mas quando acrescentarmos delay de entregar (entrega em si demora tempo / cliente pode só querer entrega a partir de x horas depois) pode impedir que se faça entrega no destino final para que se estava a ir
 #               Por isso não meti para já pelo menos
 class AlgInformed2:
-    def __init__(self):
-        print("Calculating Informed")
 
     def add_positions_to_nodes(self,graph,node_positions):
         for location, coords in node_positions.items():
@@ -37,30 +35,43 @@ class AlgInformed2:
             # temp_res += (currTime - startTime).total_seconds() / 60 # time diff in minutes
             if (temp_res < final_res):
                 final_res = temp_res
-        print ("Heuristic obtained: " + str(final_res))
+        # print ("Heuristic obtained: " + str(final_res))
         return final_res
     
+    def get_transport(packages, stats):
+        total_weight = 0.0
+        for package in packages.values():
+            total_weight += package.m_weight
+        for transport, weight in stats.max_peso:
+            if  weight <= total_weight:
+                return transport
+        # se não houver transporte que dê, retorna que não é possível
+        return None
+
     # Args:
     #recebe grafo, 
     # nome do nodo inicial, 
     # set de nomes de locais de entrega, 
-    def procura_informada(self, graph, start, packages, node_positions, path_func):
+    def procura_informada(self, graph, startPlace, startTime, packages, node_positions, stats, path_func):
 
+        transport = self.get_transport(packages,stats)
+        if not transport: # se não houver veículo que consiga transportar todos os pacotes
+            return None
+        
         # atualiza grafo com as posições para cada nodo
         self.add_positions_to_nodes(graph,node_positions)
 
         to_deliver = packages.copy()
-        currTime = datetime.strptime("2023-12-07 08:00", "%Y-%m-%d %H:%M")
         errorFlag = False
-        finalPath = [start]
+        finalPath = [startPlace]
         totalCost = 0
-        next = start
+        next = startPlace
 
         while len(to_deliver) > 0 and not errorFlag:
             prev = next # proximo nodo de que se vai partir
-            print("This iteration start: " + prev)
+            # print("This iteration start: " + prev)
 
-            result = path_func(graph,prev,to_deliver,currTime)
+            result = path_func(graph,prev,to_deliver,startTime)
             if result is not None :
                 (path,cost) = result
                 # print("result of " + path_func.__name__ + " iteration: "); print (path); print(cost)
@@ -146,7 +157,7 @@ class AlgInformed2:
 
         # g contains current distances from start_node to all other nodes
         # the default value (if it's not found in the map) is +infinity
-        g = {}  ##  g é apra substiruir pelo peso  ???
+        g = {} 
 
         g[start] = 0
 
