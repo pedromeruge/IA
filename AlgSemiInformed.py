@@ -1,16 +1,11 @@
-from asyncio import Queue
-from Graph import Graph 
-from Node import Node
-from Node import Node
 from queue import Queue
 from datetime import datetime, timedelta
 from Package import Package
 
 class AlgSemiInformed:
 
-    # devolve map que associa a cada nodo heurística baseada em limite de tempo mais proximo
-    # Args:
-    # 
+    # heurística baseada em limite de tempo mais proximo
+    # retorna lista ordenado com ordem de visita de packages
     def calculate_heuristic_urgency(self, graph, packages):
         node_visit_order = []
         sorted_Nodes = sorted(packages.values(), key=Package.getEndTime) # sort Nodes by delivery urgency
@@ -42,10 +37,10 @@ class AlgSemiInformed:
     # lista de pacotes a entregar,
     # funcão de calculo de (custo,path) entre dois nodos -!!- tem de receber como args: grafo, nome inicio, nome final, [], set()
 
-    def procura_informada(self, graph, startPlace, startTime, packages, node_positions, stats, path_func):
+    def procura_informada(self, graph, startPlace, startTime, packages, stats, path_func):
 
         # lista com nodos por visitar, ordenado por proximidade de data limite
-        Package_visit_order = self.calculate_heuristic_urgency(graph,packages)
+        package_visit_order = self.calculate_heuristic_urgency(graph,packages)
 
         (transport,total_weight) = self.get_transport(packages,stats)
         if not transport: # se não houver veículo que consiga transportar todos os pacotes
@@ -63,10 +58,10 @@ class AlgSemiInformed:
         totalCost = 0
         currNode = startPlace
 
-        while len(Package_visit_order) > 0 and not errorFlag:
+        while len(package_visit_order) > 0 and not errorFlag:
 
             prevNode = currNode
-            currNode = Package_visit_order.pop(0).getLocation() # procurar nodo com encomenda mais urgente da lista
+            currNode = package_visit_order.pop(0).getLocation() # procurar nodo com encomenda mais urgente da lista
 
             # print(f"This iteration start: from {prevNode} to {currNode}")
             # print(f'CurrTime: {currTime.strftime("%Y-%m-%d %H:%M:%S")}')
@@ -93,7 +88,7 @@ class AlgSemiInformed:
             else :
                 errorFlag = True
 
-        if (len(Package_visit_order) == 0) and not errorFlag: # necessário o not errorFlag??
+        if (len(package_visit_order) == 0) and not errorFlag: # necessário o not errorFlag??
             average_rating = sum(ratings) / len(ratings)
 
             # print(f'Final CurrTime: {currTime.strftime("%Y-%m-%d %H:%M:%S")}')
