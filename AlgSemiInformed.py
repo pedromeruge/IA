@@ -42,11 +42,12 @@ class AlgSemiInformed:
         # lista com nodos por visitar, ordenado por proximidade de data limite
         package_visit_order = self.calculate_heuristic_urgency(graph,packages)
 
-        (transport,total_weight) = self.get_transport(packages,stats)
-        if not transport: # se não houver veículo que consiga transportar todos os pacotes
-            print("No vehicle can hold that many Nodes due to weight/volume")
+        result = self.get_transport(packages,stats)
+        if not result: # se não houver veículo que consiga transportar todos os pacotes
+            print("No vehicle can hold that many packages due to weight/volume")
             return None
         else:
+            (transport,total_weight) = result
             print(f"Got transport {transport}") 
             # print(f"with weight {total_weight}")
         
@@ -58,7 +59,7 @@ class AlgSemiInformed:
         totalCost = 0
         currNode = startPlace
 
-        while len(package_visit_order) > 0 and not errorFlag:
+        while (len(package_visit_order) > 0 and not errorFlag):
 
             prevNode = currNode
             currNode = package_visit_order.pop(0).getLocation() # procurar nodo com encomenda mais urgente da lista
@@ -88,7 +89,7 @@ class AlgSemiInformed:
             else :
                 errorFlag = True
 
-        if (len(package_visit_order) == 0) and not errorFlag: # necessário o not errorFlag??
+        if (len(package_visit_order) == 0 and not errorFlag): # necessário o not errorFlag??
             average_rating = sum(ratings) / len(ratings)
 
             # print(f'Final CurrTime: {currTime.strftime("%Y-%m-%d %H:%M:%S")}')
@@ -128,8 +129,8 @@ class AlgSemiInformed:
 
         # reconstruir o caminho
 
-        path = []
         if path_found:
+            path = []
             path.append(end)
             while parent[end] is not None:
                 path.append(parent[end])
@@ -137,7 +138,9 @@ class AlgSemiInformed:
             path.reverse()
             # funçao calcula custo caminho
             custo = graph.calcula_custo(path)
-        return (path, custo)
+            return (path, custo)
+
+        return None
 
     def procura_DFS_call(self, graph, start,end,path=[],visited=set()):
         path.append(start) #caminho até ao destino

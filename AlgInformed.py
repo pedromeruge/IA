@@ -1,5 +1,5 @@
 from Package import Package
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 # TOCONSIDER: se passar por nodo onde há encomenda, não entrega logo
 #               Posso meter a fazer isso, mas quando acrescentarmos delay de entregar (entrega em si demora tempo / cliente pode só querer entrega a partir de x horas depois) pode impedir que se faça entrega no destino final para que se estava a ir
@@ -59,11 +59,12 @@ class AlgInformed:
         self.add_positions_to_nodes(graph,node_positions)
 
         #obter transporte adequado (para peso e volume)
-        (transport,total_weight) = self.get_transport(packages,stats)
-        if not transport: # se não houver veículo que consiga transportar todos os pacotes
-            print("No vehicle can hold that many Nodes due to weight/volume")
+        result = self.get_transport(packages,stats)
+        if not result: # se não houver veículo que consiga transportar todos os pacotes
+            print("No vehicle can hold that many packages due to weight/volume")
             return None
         else:
+            (transport,total_weight) = result
             print(f"Got transport {transport}") 
             # print(f"with weight {total_weight}")
         

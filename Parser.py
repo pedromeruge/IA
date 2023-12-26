@@ -15,7 +15,7 @@ class Parser:
     #map location -> package 
     # NOTE: package also includes location, but easier to acess like this
     def parsePackages(self):
-        csv_file_path = 'Graph/encomendas2.csv'
+        csv_file_path = 'Graph/encomendas.csv'
         df = pd.read_csv(csv_file_path)
         encomendas_map = {}
 
@@ -31,7 +31,7 @@ class Parser:
         #internally stores graph info for plotting and getting node coordinates
         #returns graph of Graph class
     def parseGraph(self):
-        csv_file_path = 'Graph/edges2.csv'
+        csv_file_path = 'Graph/edges.csv'
         df = pd.read_csv(csv_file_path)
 
         G = nx.Graph()

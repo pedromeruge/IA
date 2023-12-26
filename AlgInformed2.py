@@ -1,7 +1,5 @@
-from Graph import Graph
-from Node import Node
 from Package import Package
-from datetime import datetime
+from datetime import timedelta
 
 # TOCONSIDER: se passar por nodo onde há encomenda, não entrega logo
 #               Posso meter a fazer isso, mas quando acrescentarmos delay de entregar (entrega em si demora tempo / cliente pode só querer entrega a partir de x horas depois) pode impedir que se faça entrega no destino final para que se estava a ir
@@ -38,55 +36,91 @@ class AlgInformed2:
         # print ("Heuristic obtained: " + str(final_res))
         return final_res
     
-    def get_transport(packages, stats):
-        total_weight = 0.0
-        for package in packages.values():
-            total_weight += package.m_weight
-        for transport, weight in stats.max_peso:
-            if  weight <= total_weight:
-                return transport
-        # se não houver transporte que dê, retorna que não é possível
+    # decidir qual o melhor transporte de partida, tendo em conta o peso e volume das encomendas
+    def get_transport(self, Nodes, stats):
+        total_weight = 0
+        for Node in Nodes.values():
+            total_weight += Node.m_weight
+        for transport, weight in stats.max_peso.items():
+            if  total_weight <= weight:
+                return (transport, total_weight)
         return None
+        # se não houver transporte que dê, retorna que não é possível
 
+    # calcular rating para horario em que estafeta entrega pacote
+    def calculateRating(self, currTime, location, packages, stats):
+        delay = (currTime - packages[location].getEndTime()).total_seconds() / 60 # reduz-se o deliver delay que já foi acrescentado no currTime
+        # print (f'Obtained delay: {delay} from endTime: {packages[location].getEndTime().strftime("%Y-%m-%d %H:%M:%S")} and currTime: {currTime.strftime("%Y-%m-%d %H:%M:%S")}')
+        for (fixedDelay,rating) in stats.rating_decr_atraso:
+            if delay <= fixedDelay:
+                return rating
+        return 0 # se entrega for depois de 60 minutos é rating 0
+    
     # Args:
     #recebe grafo, 
     # nome do nodo inicial, 
     # set de nomes de locais de entrega, 
     def procura_informada(self, graph, startPlace, startTime, packages, node_positions, stats, path_func):
 
-        transport = self.get_transport(packages,stats)
-        if not transport: # se não houver veículo que consiga transportar todos os pacotes
-            return None
-        
         # atualiza grafo com as posições para cada nodo
         self.add_positions_to_nodes(graph,node_positions)
 
-        to_deliver = packages.copy()
+        result = self.get_transport(packages,stats)
+        if not result: # se não houver veículo que consiga transportar todos os pacotes
+            print("No vehicle can hold that many packages due to weight/volume")
+            return None
+        else:
+            (transport,total_weight) = result
+            print(f"Got transport {transport}") 
+            # print(f"with weight {total_weight}")
+        
+        to_deliver = packages.copy() #pacotes a entregar
+
+        currTime = startTime # tempo inicial
+        currVelocity = stats.base_vel[transport] - (total_weight * stats.vel_decr_peso[transport]) # velocidade inicial
+        ratings = [] # lista de ratings acumulados de entregas da pacotes
         errorFlag = False
         finalPath = [startPlace]
         totalCost = 0
-        next = startPlace
+        currNode = startPlace
 
-        while len(to_deliver) > 0 and not errorFlag:
-            prev = next # proximo nodo de que se vai partir
-            # print("This iteration start: " + prev)
+        while (len(to_deliver) > 0 and not errorFlag):
+            prevNode = currNode # proximo nodo de que se vai partir
+            # print("This iteration start: " + prevNode)
 
-            result = path_func(graph,prev,to_deliver,startTime)
+            result = path_func(graph,prevNode,to_deliver,startTime)
             if result is not None :
-                (path,cost) = result
-                # print("result of " + path_func.__name__ + " iteration: "); print (path); print(cost)
-                path.pop(0) # removemos a primeira posição do path obtido, porque já consta na lista final
-                finalPath.extend(path)
-                totalCost += cost
-                next = path[-1] # próximo nodo em que se começa será o último nodo a que se chegou na iteração anterior
+                (path,distTraveled) = result
+                # print(f'Got from {path_func.__name__} path: {path} dist: {distTraveled}')
 
-                del to_deliver[next] # remover dos pacotes a entregar o pacote atual
+                if (len(path) > 1) : # pode acontecer o primeiro nodo ser logo ponto de entrega e dava mal
+                    path.pop(0) # removemos a primeira posição do path obtido, porque já consta na lista final
+                finalPath.extend(path) #acrescentar caminho desta iteração ao caminho final
+                currNode = path[-1] # próximo nodo em que se começa, aka último nodo a que se chegou na iteração anterior
+
+                totalCost += distTraveled * stats.consumo[transport] # somar C02 na deslocação desta iteração ao total
+                timeBetweenDeliveries = timedelta(minutes= (distTraveled / currVelocity)) # tempo decorrido nesta iteração
+                # print(f"timeBetweenDeliveries: {timeBetweenDeliveries.total_seconds() / 60}")
+                currTime = max(packages[currNode].getStartTime(), currTime + timeBetweenDeliveries) # tempo máximo entre: tempo desde entrega anterior até agora ou tempo inicial de entrega para cliente; + tempo fixo de entregar encomenda
+                rating = self.calculateRating(currTime,currNode,packages, stats) # obter rating baseado em tempo de atraso da entrega
+                currTime = currTime + timedelta(minutes=stats.deliver_delay) # acrescentar tempo fixo de entrega em qualquer sitio
+                ratings.append(rating) # acrescentar rating aos ratings 
+                currVelocity += stats.vel_decr_peso[transport] * packages[currNode].getWeight() # aumentar velocidade com redução de peso da entrega
+
+                del to_deliver[currNode] # remover dos pacotes a entregar o pacote atual
 
             else :
                 errorFlag = True
 
-        if (len(to_deliver) == 0) and not errorFlag: # necessário o not errorFlag??
-            return (finalPath,totalCost)
+        if (len(to_deliver) == 0 and not errorFlag): # necessário o not errorFlag??
+            average_rating = sum(ratings) / len(ratings)
+
+            # print(f'Final CurrTime: {currTime.strftime("%Y-%m-%d %H:%M:%S")}')
+            # print(f"Final currVelocity: {currVelocity}")
+            # print(f"Final CurrConsumption: {totalCost}")
+            # print(f"Final CurrRatings {ratings}")
+
+            return (finalPath,totalCost, average_rating)
         
         print('Path does not exist!')
         return None
