@@ -2,6 +2,9 @@
 #Classe com dados sobre velocidades, capacidades, descréscimo de velocidade dos meios de transporte
 
 #NOTA: inventei uma classe nova, para poder testar com muito mais encomendas
+from cmath import inf
+
+
 class Stats:
     def __init__(self):
         self.transportes = ['bicicleta','mota','carro']
@@ -43,7 +46,8 @@ class Stats:
             (10,4),
             (15,3),
             (30,2),
-            (60,1)
+            (60,1),
+            (inf,0)
             # abaixo disso é 0 rating
         ]
         self.deliver_delay = 2 # definimos que o tempo de fazer uma entrega num local era arbitrariamente 2min

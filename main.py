@@ -33,44 +33,45 @@ def main():
     informed2 = AlgInformed2()
     stats = Stats()
 
-    print("Semi-informed BFS search")
-    result = semiInformed.procura_informada(g,startPos, startTime, package_locations, stats, semiInformed.procura_BFS)
-    if result is not None:
-        (path,custo, average_rating) = result
-        # print (f"Caminho:\n {path}\nCusto C02 g/km: {custo}, RatingFinal: {average_rating}")
-        print (f"Custo C02 g/km: {custo}, RatingFinal: {average_rating}")
-    else:
-        print("Error calculating Semi-informed BFS search") 
+    # print("Semi-informed BFS search")
+    # result = semiInformed.procura_informada(g,startPos, startTime, package_locations, stats, semiInformed.procura_BFS)
+    # if result is not None:
+    #     (path,custo, average_rating) = result
+    #     # print (f"Caminho:\n {path}\nCusto C02 g/km: {custo}, RatingFinal: {average_rating}")
+    #     print (f"Custo C02 g/km: {custo}, RatingFinal: {average_rating}")
+    # else:
+    #     print("Error calculating Semi-informed BFS search") 
 
-    print("Semi-informed DFS search")
-    result = semiInformed.procura_informada(g,startPos, startTime, package_locations, stats, semiInformed.procura_DFS)
-    if result is not None:
-        (path,custo, average_rating) = result
-        # print (f"Caminho:\n {path}\nCusto C02 g/km: {custo}, RatingFinal: {average_rating}")
-        print (f"Custo C02 g/km: {custo}, RatingFinal: {average_rating}")
-    else:
-        print("Error calculating Semi-informed DFS search") 
+    # print("Semi-informed DFS search")
+    # result = semiInformed.procura_informada(g,startPos, startTime, package_locations, stats, semiInformed.procura_DFS)
+    # if result is not None:
+    #     (path,custo, average_rating) = result
+    #     # print (f"Caminho:\n {path}\nCusto C02 g/km: {custo}, RatingFinal: {average_rating}")
+    #     print (f"Custo C02 g/km: {custo}, RatingFinal: {average_rating}")
+    # else:
+    #     print("Error calculating Semi-informed DFS search") 
 
-    print("Bad informed greedy search")
-    result = informed.procura_informada(g,startPos, startTime, package_locations, node_positions, stats, informed.procura_greedy)
-    if result is not None:
-        (path,custo, avg_rating) = result
-        # print (f"Caminho:\n {path}\nCusto C02 g/km: {custo}, RatingFinal: {avg_rating}")
-        print (f"Custo C02 g/km: {custo}, RatingFinal: {average_rating}")
-    else:
-        print("Error calculating Bad informed greedy search") 
+    # print("Bad informed greedy search")
+    # result = informed.procura_informada(g,startPos, startTime, package_locations, node_positions, stats, informed.procura_greedy)
+    # if result is not None:
+    #     (path,custo, avg_rating) = result
+    #     # print (f"Caminho:\n {path}\nCusto C02 g/km: {custo}, RatingFinal: {avg_rating}")
+    #     print (f"Custo C02 g/km: {custo}, RatingFinal: {average_rating}")
+    # else:
+    #     print("Error calculating Bad informed greedy search") 
 
-    print("Bad informed aStar search")
-    result = informed.procura_informada(g,startPos, startTime, package_locations, node_positions, stats, informed.procura_aStar)
-    if result is not None:
-        (path,custo, avg_rating) = result
-        # print (f"Caminho:\n {path}\nCusto C02 g/km: {custo}, RatingFinal: {avg_rating}")
-        print (f"Custo C02 g/km: {custo}, RatingFinal: {average_rating}")
-    else:
-        print("Error calculating Bad informed aStar search") 
+    # print("Bad informed aStar search")
+    # result = informed.procura_informada(g,startPos, startTime, package_locations, node_positions, stats, informed.procura_aStar)
+    # if result is not None:
+    #     (path,custo, avg_rating) = result
+    #     # print (f"Caminho:\n {path}\nCusto C02 g/km: {custo}, RatingFinal: {avg_rating}")
+    #     print (f"Custo C02 g/km: {custo}, RatingFinal: {average_rating}")
+    # else:
+    #     print("Error calculating Bad informed aStar search") 
 
+    wantedRating = 3.0
     print("Informed greedy search")
-    result = informed2.procura_informada(g,startPos, startTime, package_locations, node_positions, stats, informed2.procura_greedy)
+    result = informed2.procura_informada(g,startPos, startTime, wantedRating, package_locations, node_positions, stats, informed2.procura_greedy)
     if result is not None:
         (path,custo, avg_rating) = result
         # print (f"Caminho:\n {path}\nCusto C02 g/km: {custo}, RatingFinal: {avg_rating}")
@@ -79,7 +80,7 @@ def main():
         print("Error calculating Informed greedy search") 
 
     print("Informed aStar search")
-    result = informed2.procura_informada(g,startPos, startTime, package_locations, node_positions, stats, informed2.procura_aStar)
+    result = informed2.procura_informada(g,startPos, startTime, wantedRating, package_locations, node_positions, stats, informed2.procura_aStar)
     if result is not None:
         (path,custo, avg_rating) = result
         # print (f"Caminho:\n {path}\nCusto C02 g/km: {custo}, RatingFinal: {avg_rating}")

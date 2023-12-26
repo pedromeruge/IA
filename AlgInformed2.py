@@ -16,21 +16,41 @@ class AlgInformed2:
     #   diff(tempo atual, tempo limite) (preciso, porque nodos vizinhos podem estar a distância diferente do nodo atual, resultando em tempos diferentes lá) +
     #   diff(tempo inicial, tempo atual) (se estiver muito longe do início, n vale a pena ir lá)
     #   POR CONSIDERAR: diff(tmepo inicial, tempo final) ??
-    def calculate_node_heuristic(self, graph, currNode, packages_left, currTime):
+    def calculate_node_heuristic(self, graph, currNode, packages_left, currTime, wantedRating,transport, stats):
         (currX,currY) = graph.get_heuristica(currNode)
         final_res = float('inf') # guardar a heurística mínima, para todos os packages a ser entregues!!
-        temp_res = 0 # em relação a cada package calcular heurística
         for package in packages_left.values():
             place = package.m_location
             startTime = package.m_start_time
             endTime = package.m_end_time
             # print(f"package left: {place}, {startTime},{endTime}")
             (endX,endY) = graph.get_heuristica(place)
-            temp_res += ((endX-currX)**2 + (endY-currY)**2)
-            # print (f"Geo diff {temp_res}")
-            temp_res += (endTime - currTime).total_seconds() / 60 # time diff in minutes
-            # print (f"After time {temp_res}")
-            # temp_res += (currTime - startTime).total_seconds() / 60 # time diff in minutes
+
+            # heurística depende de:
+            distHeuristic = ((endX-currX)**2 + (endY-currY)**2) # distância (x,y) do ponto atual até um ponto de entrega
+            # print (f"GeoDiff {distHeuristic * 100}")
+
+            # diferença de tempo entre tempo atual e prazo inicial de entrega, prejudica se for muito antes do início, não beneficia se for depois
+            earlyHeuristic = max(0,(startTime - currTime).total_seconds() / 60)
+            # print(f"earlyDiff: {earlyHeuristic * 0.5}") # time diff in minutes
+
+            # diferença de tempo entre tempo atual e prazo máximo de entrega, 
+            # prejudica entregas depois do prazo, não beneficia se for antes
+            lateHeuristic = max(0,(currTime - endTime).total_seconds() / 60)
+            # print(f"lateDiff {lateHeuristic}") # time diff in minutes
+
+            #beneficiar entregas dentro do prazo
+            inTimeHeuristic = max(0,(endTime - currTime).total_seconds() / 60)
+
+            speedHeuristic = 0
+            if (currNode == package.m_location):
+                speedHeuristic = package.m_weight * stats.vel_decr_peso[transport] # aumento de velocidade com entrega de pacote, baseado em peso do pacote
+            # print(f"SpeedDiff {-speedHeuristic}") # time diff in minutes
+
+            temp_res = 100 * distHeuristic + lateHeuristic - 1.2 * inTimeHeuristic + 0.25 * earlyHeuristic - 2000 * speedHeuristic
+            # - speedHeuristic # heurística para este package
+            # print (f"Heuristic iter obtained {temp_res}")
+
             if (temp_res < final_res):
                 final_res = temp_res
         # print ("Heuristic obtained: " + str(final_res))
@@ -60,7 +80,7 @@ class AlgInformed2:
     #recebe grafo, 
     # nome do nodo inicial, 
     # set de nomes de locais de entrega, 
-    def procura_informada(self, graph, startPlace, startTime, packages, node_positions, stats, path_func):
+    def procura_informada(self, graph, startPlace, startTime, wantedRating, packages, node_positions, stats, path_func):
 
         # atualiza grafo com as posições para cada nodo
         self.add_positions_to_nodes(graph,node_positions)
@@ -88,7 +108,8 @@ class AlgInformed2:
             prevNode = currNode # proximo nodo de que se vai partir
             # print("This iteration start: " + prevNode)
 
-            result = path_func(graph,prevNode,to_deliver,startTime)
+            result = path_func(graph,prevNode,to_deliver,startTime, wantedRating, transport, stats)
+
             if result is not None :
                 (path,distTraveled) = result
                 # print(f'Got from {path_func.__name__} path: {path} dist: {distTraveled}')
@@ -125,7 +146,7 @@ class AlgInformed2:
         print('Path does not exist!')
         return None
     
-    def procura_greedy(self, graph, start, to_deliver, currTime):
+    def procura_greedy(self, graph, start, to_deliver, currTime, wantedRating, transport, stats):
 
         open_list = set([start])
         closed_list = set([])
@@ -142,7 +163,7 @@ class AlgInformed2:
             for v in open_list:
 
                 # distancia em relação ao próximo nodo a visitar
-                if n == None or self.calculate_node_heuristic(graph,v,to_deliver,currTime) < self.calculate_node_heuristic(graph,n,to_deliver,currTime):
+                if n == None or self.calculate_node_heuristic(graph,v,to_deliver,currTime, wantedRating, transport, stats) < self.calculate_node_heuristic(graph,n,to_deliver,currTime, wantedRating, transport, stats):
                     n = v
 
             if n == None:
@@ -181,7 +202,7 @@ class AlgInformed2:
         print('Path does not exist!')
         return None
     
-    def procura_aStar(self, graph, start, to_deliver, currTime):
+    def procura_aStar(self, graph, start, to_deliver, currTime, wantedRating, transport, stats):
         # open_list is a list of nodes which have been visited, but who's neighbors
         # haven't all been inspected, starts off with the start node
         # closed_list is a list of nodes which have been visited
@@ -206,7 +227,7 @@ class AlgInformed2:
             # find a node with the lowest value of f() - evaluation function
             for v in open_list:
                 ##if n == None or g[v] + self.getH(v) < g[n] + self.getH(n):  # heuristica ver.....
-                if n == None or g[v] + self.calculate_node_heuristic(graph,v,to_deliver,currTime) < g[n] + self.calculate_node_heuristic(graph,v,to_deliver,currTime):  # heuristica ver.....
+                if n == None or g[v] + self.calculate_node_heuristic(graph,v,to_deliver,currTime, wantedRating, transport, stats) < g[n] + self.calculate_node_heuristic(graph,v,to_deliver,currTime, wantedRating, transport, stats): 
                     n = v
             if n == None:
                 print('Cannot deliver package!')
@@ -243,6 +264,10 @@ class AlgInformed2:
                     if g[m] > g[n] + weight:
                         g[m] = g[n] + weight
                         parents[m] = n
+
+                        # fatores que afetam o valor de um nodo:
+                        # if m in to_deliver:
+                        #     g[m] -= to_deliver[m].m_weight * stats.vel_decr_peso[transport] # aumento de velocidade se nodo é ponto de entrega
 
                         if m in closed_list:
                             closed_list.remove(m)
