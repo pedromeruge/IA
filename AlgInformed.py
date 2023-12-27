@@ -23,7 +23,7 @@ class AlgInformed:
     def calculate_node_heuristic(self, graph, curr, end):
         (currX,currY) = graph.get_heuristica(curr)
         (endX,endY) = graph.get_heuristica(end)
-        res = ((endX-currX)**2 + (endY-currY)**2)
+        res = ((endX-currX)**2 + (endY-currY)**2) # otimiza-se não incluindo o sqrt, evita-se calculos a mais
         return res
     
     # decidir qual o melhor transporte de partida, tendo em conta o peso e volume das encomendas
@@ -50,13 +50,10 @@ class AlgInformed:
      #recebe grafo, 
      # nome do nodo inicial, 
      # set de nomes de locais de entrega, 
-    def procura_informada(self, graph, startPlace, startTime, packages, node_positions, stats, path_func):
+    def procura_informada(self, graph, startPlace, startTime, packages, stats, path_func):
         
         # lista com nodos por visitar, ordenado por proximidade de data limite
         package_visit_order = self.calculate_heuristic_urgency(graph,packages)
-
-        # atualiza grafo com as posições para cada nodo
-        self.add_positions_to_nodes(graph,node_positions)
 
         #obter transporte adequado (para peso e volume)
         result = self.get_transport(packages,stats)

@@ -8,25 +8,29 @@ from datetime import datetime
 def main():
    
     p = Parser()
-    g = p.parseGraph()
+    # g = p.parseGraph()
+    g = p.parseGraphFromOSM("Gualtar")
     package_locations = p.parsePackages()
-    node_positions = p.getNodePositions()
+    # node_positions = p.getNodePositions()
 
-    startPos = "Largo da Madre de Deus"
+    startPos = "Rua Monte de Cima"
     startTime = datetime.strptime("2023-12-07 08:00", "%Y-%m-%d %H:%M")
-    # print("Node Coordinates:")
-    # for node, coordinates in node_positions.items():
-    #     print(f"{node}: {coordinates}")
+    wantedRating = 5
 
-    # print("Obtained Graph")
-    # for node in g.getNodes():
-    #     print (">>" + str(node))
+    # # print("Node Coordinates:")
+    # # for node, coordinates in node_positions.items():
+    # #     print(f"{node}: {coordinates}")
 
-    # print("Package Coordinates:")
-    # for package in package_locations.values():
-    #     print ("For location " + package.getLocation() + ",coords: " + str(node_positions[package.getLocation()]))
+    # # print("Obtained Graph")
+    # # for node in g.getNodes():
+    # #     print (">>" + str(node))
 
-    # p.drawGraph(20,20, startPos)
+    # # print("Package Coordinates:")
+    # # for package in package_locations.values():
+    # #     print ("For location " + package.getLocation() + ",coords: " + str(node_positions[package.getLocation()]))
+
+    # p.drawGraphFromOSM(20,20, startPos)
+    # p.drawGraphFromOSM(15,15,startPos)
 
     semiInformed = AlgSemiInformed()
     informed = AlgInformed()
@@ -46,22 +50,22 @@ def main():
     # result = semiInformed.procura_informada(g,startPos, startTime, package_locations, stats, semiInformed.procura_DFS)
     # if result is not None:
     #     (path,custo, average_rating) = result
-    #     # print (f"Caminho:\n {path}\nCusto C02 g/km: {custo}, RatingFinal: {average_rating}")
+        # print (f"Caminho:\n {path}\nCusto C02 g/km: {custo}, RatingFinal: {average_rating}")
     #     print (f"Custo C02 g/km: {custo}, RatingFinal: {average_rating}")
     # else:
     #     print("Error calculating Semi-informed DFS search") 
 
     # print("Bad informed greedy search")
-    # result = informed.procura_informada(g,startPos, startTime, package_locations, node_positions, stats, informed.procura_greedy)
+    # result = informed.procura_informada(g,startPos, startTime, package_locations, stats, informed.procura_greedy)
     # if result is not None:
     #     (path,custo, avg_rating) = result
-    #     # print (f"Caminho:\n {path}\nCusto C02 g/km: {custo}, RatingFinal: {avg_rating}")
+        # print (f"Caminho:\n {path}\nCusto C02 g/km: {custo}, RatingFinal: {avg_rating}")
     #     print (f"Custo C02 g/km: {custo}, RatingFinal: {average_rating}")
     # else:
     #     print("Error calculating Bad informed greedy search") 
 
     # print("Bad informed aStar search")
-    # result = informed.procura_informada(g,startPos, startTime, package_locations, node_positions, stats, informed.procura_aStar)
+    # result = informed.procura_informada(g,startPos, startTime, package_locations, stats, informed.procura_aStar)
     # if result is not None:
     #     (path,custo, avg_rating) = result
     #     # print (f"Caminho:\n {path}\nCusto C02 g/km: {custo}, RatingFinal: {avg_rating}")
@@ -69,9 +73,8 @@ def main():
     # else:
     #     print("Error calculating Bad informed aStar search") 
 
-    wantedRating = 3.0
     print("Informed greedy search")
-    result = informed2.procura_informada(g,startPos, startTime, wantedRating, package_locations, node_positions, stats, informed2.procura_greedy)
+    result = informed2.procura_informada(g,startPos, startTime, wantedRating, package_locations, stats, informed2.procura_greedy)
     if result is not None:
         (path,custo, avg_rating) = result
         # print (f"Caminho:\n {path}\nCusto C02 g/km: {custo}, RatingFinal: {avg_rating}")
@@ -80,7 +83,7 @@ def main():
         print("Error calculating Informed greedy search") 
 
     print("Informed aStar search")
-    result = informed2.procura_informada(g,startPos, startTime, wantedRating, package_locations, node_positions, stats, informed2.procura_aStar)
+    result = informed2.procura_informada(g,startPos, startTime, wantedRating, package_locations, stats, informed2.procura_aStar)
     if result is not None:
         (path,custo, avg_rating) = result
         # print (f"Caminho:\n {path}\nCusto C02 g/km: {custo}, RatingFinal: {avg_rating}")

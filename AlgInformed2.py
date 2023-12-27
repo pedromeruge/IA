@@ -1,3 +1,4 @@
+import math
 from Package import Package
 from datetime import timedelta
 
@@ -16,7 +17,7 @@ class AlgInformed2:
     #   diff(tempo atual, tempo limite) (preciso, porque nodos vizinhos podem estar a distância diferente do nodo atual, resultando em tempos diferentes lá) +
     #   diff(tempo inicial, tempo atual) (se estiver muito longe do início, n vale a pena ir lá)
     #   POR CONSIDERAR: diff(tmepo inicial, tempo final) ??
-    def calculate_node_heuristic(self, graph, currNode, packages_left, currTime, wantedRating,transport, stats):
+    def calculate_node_heuristic(self, graph, currNode, packages_left, currTime, wantedRating, transport, stats):
         (currX,currY) = graph.get_heuristica(currNode)
         final_res = float('inf') # guardar a heurística mínima, para todos os packages a ser entregues!!
         for package in packages_left.values():
@@ -27,28 +28,24 @@ class AlgInformed2:
             (endX,endY) = graph.get_heuristica(place)
 
             # heurística depende de:
-            distHeuristic = ((endX-currX)**2 + (endY-currY)**2) # distância (x,y) do ponto atual até um ponto de entrega
-            # print (f"GeoDiff {distHeuristic * 100}")
+            distHeuristic = math.sqrt((endX-currX)**2 + (endY-currY)**2) # distância (x,y) do ponto atual até um ponto de entrega
+            # print (f"GeoDiff {distHeuristic * 100000}")
 
-            # diferença de tempo entre tempo atual e prazo inicial de entrega, prejudica se for muito antes do início, não beneficia se for depois
+            # # diferença de tempo entre tempo atual e prazo inicial de entrega, prejudica se for muito antes do início, não beneficia se for depois
             earlyHeuristic = max(0,(startTime - currTime).total_seconds() / 60)
-            # print(f"earlyDiff: {earlyHeuristic * 0.5}") # time diff in minutes
-
-            # diferença de tempo entre tempo atual e prazo máximo de entrega, 
-            # prejudica entregas depois do prazo, não beneficia se for antes
-            lateHeuristic = max(0,(currTime - endTime).total_seconds() / 60)
-            # print(f"lateDiff {lateHeuristic}") # time diff in minutes
+            # # print(f"earlyDiff: {earlyHeuristic * 0.25}") # time diff in minutes
 
             #beneficiar entregas dentro do prazo
             inTimeHeuristic = max(0,(endTime - currTime).total_seconds() / 60)
+            # print(f"timeHeuristic: {- 0.1 * wantedRating * inTimeHeuristic}") # time diff in minutes
 
             speedHeuristic = 0
             if (currNode == package.m_location):
                 speedHeuristic = package.m_weight * stats.vel_decr_peso[transport] # aumento de velocidade com entrega de pacote, baseado em peso do pacote
-            # print(f"SpeedDiff {-speedHeuristic}") # time diff in minutes
+            # print(f"SpeedDiff {-20 * speedHeuristic}") # time diff in minutes
 
-            temp_res = 100 * distHeuristic + lateHeuristic - 1.2 * inTimeHeuristic + 0.25 * earlyHeuristic - 2000 * speedHeuristic
-            # - speedHeuristic # heurística para este package
+            temp_res = 90000 * distHeuristic - (1 / inTimeHeuristic)* 0.15 * wantedRating - 200 * speedHeuristic + 0.05 * earlyHeuristic
+
             # print (f"Heuristic iter obtained {temp_res}")
 
             if (temp_res < final_res):
@@ -80,10 +77,7 @@ class AlgInformed2:
     #recebe grafo, 
     # nome do nodo inicial, 
     # set de nomes de locais de entrega, 
-    def procura_informada(self, graph, startPlace, startTime, wantedRating, packages, node_positions, stats, path_func):
-
-        # atualiza grafo com as posições para cada nodo
-        self.add_positions_to_nodes(graph,node_positions)
+    def procura_informada(self, graph, startPlace, startTime, wantedRating, packages, stats, path_func):
 
         result = self.get_transport(packages,stats)
         if not result: # se não houver veículo que consiga transportar todos os pacotes
