@@ -1,4 +1,5 @@
 import math
+
 from Package import Package
 from datetime import timedelta
 
@@ -20,7 +21,10 @@ class AlgInformed2:
     def calculate_node_heuristic(self, graph, currNode, packages_left, currTime, wantedRating, transport, stats):
         (currX,currY) = graph.get_heuristica(currNode)
         final_res = float('inf') # guardar a heurística mínima, para todos os packages a ser entregues!!
+        # print(f"Curr node: {currNode}")
+
         for package in packages_left.values():
+            # print(f"iter for package {package.m_location} ")
             place = package.m_location
             startTime = package.m_start_time
             endTime = package.m_end_time
@@ -29,29 +33,35 @@ class AlgInformed2:
 
             # heurística depende de:
             distHeuristic = math.sqrt((endX-currX)**2 + (endY-currY)**2) # distância (x,y) do ponto atual até um ponto de entrega
-            # print (f"GeoDiff {distHeuristic * 100000}")
+            # print (f"GeoDiff {distHeuristic * 100}")
 
-            # # diferença de tempo entre tempo atual e prazo inicial de entrega, prejudica se for muito antes do início, não beneficia se for depois
+            # # # diferença de tempo entre tempo atual e prazo inicial de entrega, prejudica se for muito antes do início, não beneficia se for depois
             earlyHeuristic = max(0,(startTime - currTime).total_seconds() / 60)
-            # # print(f"earlyDiff: {earlyHeuristic * 0.25}") # time diff in minutes
+            # # # print(f"earlyDiff: {earlyHeuristic * 0.25}") # time diff in minutes
 
             #beneficiar entregas dentro do prazo
-            inTimeHeuristic = max(0,(endTime - currTime).total_seconds() / 60)
-            # print(f"timeHeuristic: {- 0.1 * wantedRating * inTimeHeuristic}") # time diff in minutes
+            inTimeHeuristic = abs((endTime - currTime).total_seconds() / 60)
+            # print(f"timeHeuristic: {inTimeHeuristic}") # time diff in minutes
 
             speedHeuristic = 0
             if (currNode == package.m_location):
                 speedHeuristic = package.m_weight * stats.vel_decr_peso[transport] # aumento de velocidade com entrega de pacote, baseado em peso do pacote
             # print(f"SpeedDiff {-20 * speedHeuristic}") # time diff in minutes
-
-            temp_res = 90000 * distHeuristic - (1 / inTimeHeuristic)* 0.15 * wantedRating - 200 * speedHeuristic + 0.05 * earlyHeuristic
-
-            # print (f"Heuristic iter obtained {temp_res}")
-
+            temp_res =  (((inTimeHeuristic + earlyHeuristic * 0.2) * self.multipliter_for_rating_function(wantedRating)) + 100 * distHeuristic - 20 * speedHeuristic) * 22
+            
+            #NOTA: REFERENTE À LINHA ACIMA ^^^^^^^^^^^^^^^^^^
+            #NOTA : fator à direita de todo na funcao altera na aStar a importância de parte custo uniforme e parte heurística de aStar (maior valor da constante -> mais peso para heurística ->  mais rating -> mais consumo)
+            #multiplier_for_rating_function é para tentar encontrar um multiplier decente que permita obter ratings 1,2,3,4,5 com melhor consumo para esse rating dado -> REQUER PACIENCIA, N TIVE, ASSUMO QUE SE QUER RATING 5 SEMPRE E TA A ANDAR
+            
             if (temp_res < final_res):
                 final_res = temp_res
-        # print ("Heuristic obtained: " + str(final_res))
+        # print ("Final Heuristic for iter: " + str(final_res))
+        # val = input("Next")
         return final_res
+    
+    def multipliter_for_rating_function(self, x):
+        y = 0.2 * x
+        return y
     
     # decidir qual o melhor transporte de partida, tendo em conta o peso e volume das encomendas
     def get_transport(self, Nodes, stats):
@@ -102,16 +112,15 @@ class AlgInformed2:
             prevNode = currNode # proximo nodo de que se vai partir
             # print("This iteration start: " + prevNode)
 
-            result = path_func(graph,prevNode,to_deliver,startTime, wantedRating, transport, stats)
+            result = path_func(graph,prevNode,to_deliver,currTime, wantedRating, transport, stats)
 
             if result is not None :
                 (path,distTraveled) = result
                 # print(f'Got from {path_func.__name__} path: {path} dist: {distTraveled}')
 
-                if (len(path) > 1) : # pode acontecer o primeiro nodo ser logo ponto de entrega e dava mal
-                    path.pop(0) # removemos a primeira posição do path obtido, porque já consta na lista final
-                finalPath.extend(path) #acrescentar caminho desta iteração ao caminho final
                 currNode = path[-1] # próximo nodo em que se começa, aka último nodo a que se chegou na iteração anterior
+                path.pop(0) # removemos a primeira posição do path obtido, porque já consta na lista final
+                finalPath.extend(path) #acrescentar caminho desta iteração ao caminho final
 
                 totalCost += distTraveled * stats.consumo[transport] # somar C02 na deslocação desta iteração ao total
                 timeBetweenDeliveries = timedelta(minutes= (distTraveled / currVelocity)) # tempo decorrido nesta iteração
@@ -121,7 +130,7 @@ class AlgInformed2:
                 currTime = currTime + timedelta(minutes=stats.deliver_delay) # acrescentar tempo fixo de entrega em qualquer sitio
                 ratings.append(rating) # acrescentar rating aos ratings 
                 currVelocity += stats.vel_decr_peso[transport] * packages[currNode].getWeight() # aumentar velocidade com redução de peso da entrega
-
+                # print(f'Delivered packet {currNode} with rating {rating} currTime {currTime.strftime("%Y-%m-%d %H:%M:%S")}')
                 del to_deliver[currNode] # remover dos pacotes a entregar o pacote atual
 
             else :
@@ -221,7 +230,7 @@ class AlgInformed2:
             # find a node with the lowest value of f() - evaluation function
             for v in open_list:
                 ##if n == None or g[v] + self.getH(v) < g[n] + self.getH(n):  # heuristica ver.....
-                if n == None or g[v] + self.calculate_node_heuristic(graph,v,to_deliver,currTime, wantedRating, transport, stats) < g[n] + self.calculate_node_heuristic(graph,v,to_deliver,currTime, wantedRating, transport, stats): 
+                if n == None or g[v] + self.calculate_node_heuristic(graph,v,to_deliver,currTime, wantedRating, transport, stats) < g[n] + self.calculate_node_heuristic(graph,n,to_deliver,currTime, wantedRating, transport, stats): 
                     n = v
             if n == None:
                 print('Cannot deliver package!')

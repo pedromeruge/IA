@@ -59,6 +59,10 @@ class Parser:
         self.m_pos = nx.kamada_kawai_layout(G, weight='weight')
         # self.m_pos = nx.fruchterman_reingold_layout(G, weight='weight')
 
+        # meter pontos (x,y) de cada ponto no nosso grafo
+        for node in self.m_G.nodes:
+            my_graph.add_heuristica(node, self.m_pos[node])
+
         return my_graph
     
     def parseGraphFromOSM(self, location_name, network_type="drive"):
@@ -115,13 +119,6 @@ class Parser:
 
         print("Finished parsing")
         return my_graph
-    
-    def getNodePositions(self):
-        if (not self.m_G) or (not self.m_pos):
-            print ("must call parseGraph first")
-        #map de: localizacao -> (x,y)
-        node_positions = {node: self.m_pos[node] for node in self.m_G.nodes}
-        return node_positions
 
     #x and y size of window
     # startPos -> nome da posição inicial
@@ -144,7 +141,7 @@ class Parser:
         for node, pos in self.m_pos.items():
             if node in self.m_encomendas:
                 encomenda = self.m_encomendas[node]
-                circle_radius = 0.6 * len(self.m_G.nodes)
+                circle_radius = 0.3 * len(self.m_G.nodes)
                 circle_color = 'red'
                 nx.draw_networkx_nodes(self.m_G, self.m_pos, nodelist=[node], node_size=circle_radius,
                                     node_color=circle_color, alpha=0.5)
@@ -159,7 +156,7 @@ class Parser:
         if startPos :
             if startPos in self.m_pos:
                 startPos_pos = self.m_pos[startPos]
-                start_circle_radius = 0.6 * len(self.m_G.nodes)  # Adjust the size of the circle around the startPos
+                start_circle_radius = 0.3 * len(self.m_G.nodes)  # Adjust the size of the circle around the startPos
                 start_circle_color = 'orange'
                 nx.draw_networkx_nodes(self.m_G, self.m_pos, nodelist=[startPos], node_size=start_circle_radius,
                                     node_color=start_circle_color, alpha=0.5)
@@ -174,7 +171,7 @@ class Parser:
     # startPos -> nome da posição inicial
     def drawGraphFromOSM(self, xSize, ySize, startPos=None, filename="static_graph.png"):
         if (not self.m_G) or (not self.m_pos) or (not self.m_encomendas):
-            print("Must call parseGraph and parsePackages first")
+            print("Must call parseGraphFromOSM and parsePackages first")
             return None
 
         node_size = 20
@@ -192,15 +189,11 @@ class Parser:
         labels = {node: node for node in nodes_to_label}  # Label with the node name itself
         nx.draw_networkx_labels(self.m_G, self.m_pos, labels=labels, font_size=8)
 
-        # Draw edge labels with weights
-        edge_labels = {(u, v): f"{data['weight']:.3f}" for u, v, data in self.m_G.edges(data=True)}
-        nx.draw_networkx_edge_labels(self.m_G, self.m_pos, edge_labels=edge_labels, font_color='grey', font_size=3)
-
         # Desenhar circulos à volta de todos os nodos e as datas de fim e início
         for node, pos in self.m_pos.items():
             if node in self.m_encomendas:
                 encomenda = self.m_encomendas[node]
-                circle_radius = 0.6 * len(self.m_G.nodes)
+                circle_radius = 0.3 * len(self.m_G.nodes)
                 circle_color = 'red'
                 nx.draw_networkx_nodes(self.m_G, self.m_pos, nodelist=[node], node_size=circle_radius,
                                     node_color=circle_color, alpha=0.5)
@@ -211,11 +204,16 @@ class Parser:
                 plt.text(pos[0], pos[1] + 0.02, f"Begin: {dateStart}\nEnd: {dateEnd}",
                         fontsize=8, ha='center', va='center', color='red')
 
+        # Draw edge labels with weights
+        edge_labels = {(u, v): f"{data['weight']:.3f}" for u, v, data in self.m_G.edges(data=True)}
+        nx.draw_networkx_edge_labels(self.m_G, self.m_pos, edge_labels=edge_labels, font_color='grey', font_size=3)
+
+
         # Desenhar circulo à volta da posicao inicial
         if startPos:
             if startPos in self.m_pos:
                 startPos_pos = self.m_pos[startPos]
-                start_circle_radius = 0.6 * len(self.m_G.nodes)  # Adjust the size of the circle around the startPos
+                start_circle_radius = 0.3 * len(self.m_G.nodes)  # Adjust the size of the circle around the startPos
                 start_circle_color = 'orange'
                 nx.draw_networkx_nodes(self.m_G, self.m_pos, nodelist=[startPos], node_size=start_circle_radius,
                                     node_color=start_circle_color, alpha=0.5)
