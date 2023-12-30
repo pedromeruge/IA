@@ -18,7 +18,7 @@ class Parser:
     #map location -> package 
     # NOTE: package also includes location, but easier to acess like this
     def parsePackages(self):
-        csv_file_path = 'Graph/encomendas2.csv'
+        csv_file_path = 'Graph/encomendas.csv'
         df = pd.read_csv(csv_file_path)
         encomendas_map = {}
 
@@ -31,7 +31,7 @@ class Parser:
         return encomendas_map
 
     def parseGraph(self):
-        csv_file_path = 'Graph/edges2.csv'
+        csv_file_path = 'Graph/edges.csv'
         df = pd.read_csv(csv_file_path, delimiter=',')
 
         G = nx.Graph()
@@ -137,10 +137,12 @@ class Parser:
             if (motorcycle_allowed): vehicles.append(Stats.transportes[1])
             if (car_allowed): vehicles.extend([Stats.transportes[2],Stats.transportes[3]])
 
+            if (is_open == False or len(vehicles) < 4):
+                print(f"CHANGES: Between {node1} and {node2} open: {is_open} and vehicles {vehicles}")
+
             my_graph.add_edge(n1,n3, weight/2, is_open, vehicles)
             my_graph.add_edge(n3,n2, weight/2, is_open, vehicles)
             
-
             my_graph.add_heuristica(node1_name, (x1,y1))
             my_graph.add_heuristica(node2_name, (x2,y2))
             my_graph.add_heuristica(middle_node, (x3,y3))         

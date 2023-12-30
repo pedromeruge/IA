@@ -127,7 +127,7 @@ class AlgInformed2:
             return None
         else:
             (transport,total_weight) = result
-            print(f"Got transport {transport}") 
+            # print(f"Got transport {transport}") 
             # print(f"with weight {total_weight}")
         
         to_deliver = packages.copy() #pacotes a entregar
