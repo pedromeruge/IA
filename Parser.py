@@ -1,3 +1,5 @@
+import ast
+from Stats import Stats
 import osmnx as ox
 import pandas as pd
 import networkx as nx
@@ -5,6 +7,7 @@ import matplotlib.pyplot as plt
 from Graph import Graph
 from Node import Node
 from Package import Package
+import csv
 
 class Parser:
     def __init__(self):
@@ -15,7 +18,7 @@ class Parser:
     #map location -> package 
     # NOTE: package also includes location, but easier to acess like this
     def parsePackages(self):
-        csv_file_path = 'Graph/encomendas3.csv'
+        csv_file_path = 'Graph/encomendas2.csv'
         df = pd.read_csv(csv_file_path)
         encomendas_map = {}
 
@@ -29,15 +32,24 @@ class Parser:
 
     def parseGraph(self):
         csv_file_path = 'Graph/edges2.csv'
-        df = pd.read_csv(csv_file_path)
+        df = pd.read_csv(csv_file_path, delimiter=',')
 
         G = nx.Graph()
         my_graph = Graph()
 
         # ler grafo de ficheiro
         for index, row in df.iterrows():
-            node1, node2, weight = row['Node1'].strip(), row['Node2'].strip(), row['Weight']
-            #ler grafo para biblioteca  networkx
+            node1, node2, weight, is_open, bicycle, mota, car, truck = (
+                row['Node1'].strip(),
+                row['Node2'].strip(),
+                row['Weight'],
+                self.str_to_bool(row['Open']),
+                self.str_to_bool(row['Bicycle']),
+                self.str_to_bool(row['Motorcycle']),
+                self.str_to_bool(row['Car']),
+                self.str_to_bool(row['Truck'])
+            )
+
             if G.has_edge(node1, node2):
                 G[node1][node2]['weight'] += weight
             else:
@@ -46,7 +58,16 @@ class Parser:
             #ler grafo para nossa classe Grafo tambem
             n1 = Node(node1)
             n2 = Node(node2)
-            my_graph.add_edge(n1,n2, weight)
+            vehicles = []
+            if (bicycle): vehicles.append(Stats.transportes[0])
+            if (mota): vehicles.append(Stats.transportes[1])
+            if (car): vehicles.append(Stats.transportes[2])
+            if (truck): vehicles.append(Stats.transportes[3])
+
+            if (is_open == False or len(vehicles) < 4):
+                print(f"CHANGES: Between {node1} and {node2} open: {is_open} and vehicles {vehicles}")
+
+            my_graph.add_edge(n1,n2, weight, is_open, vehicles)
 
         # print("Number of nodes:", G.number_of_nodes())
         # print("Number of edges:", G.number_of_edges())
@@ -74,8 +95,14 @@ class Parser:
         for edge in map_graph.edges(data=True):
             node1, node2, data = edge
             street_name = data.get("name", "?" + str(i))
+            weight = data.get("length",0)
+            is_open = data.get("access", "yes") == "yes" #rua fechada ou não
+            car_allowed = data.get("motorcar", "yes")  == "yes"
+            motorcycle_allowed = data.get("motorcycle", "yes")  == "yes"
+            bicycle_allowed = data.get("bicycle", "yes")  == "yes"
+            # max_speed = data.get("maxspeed", None)
+            # is_highway = data.get("highway", None) is not None
 
-            weight = data['length']
             x1, y1 = (map_graph.nodes[node1]['x'], map_graph.nodes[node1]['y'])
             x2, y2 = (map_graph.nodes[node2]['x'], map_graph.nodes[node2]['y'])
             middle_node = str(self.get_first_element(street_name))
@@ -103,9 +130,17 @@ class Parser:
             n1 = Node(node1_name)
             n2 = Node(node2_name)
             n3 = Node(middle_node)
-            my_graph.add_edge(n1,n3, weight/2)
-            my_graph.add_edge(n3,n2, weight/2)
+
+            #veículos permitidos nesta estrada
+            vehicles = []
+            if(bicycle_allowed): vehicles.append(Stats.transportes[0])
+            if (motorcycle_allowed): vehicles.append(Stats.transportes[1])
+            if (car_allowed): vehicles.extend([Stats.transportes[2],Stats.transportes[3]])
+
+            my_graph.add_edge(n1,n3, weight/2, is_open, vehicles)
+            my_graph.add_edge(n3,n2, weight/2, is_open, vehicles)
             
+
             my_graph.add_heuristica(node1_name, (x1,y1))
             my_graph.add_heuristica(node2_name, (x2,y2))
             my_graph.add_heuristica(middle_node, (x3,y3))         
@@ -113,9 +148,12 @@ class Parser:
         self.m_G = G
 
         #layout do grafo a construir
-        # self.m_pos = nx.spring_layout(G, seed=42, weight='weight')
-        self.m_pos = nx.kamada_kawai_layout(G, weight='weight')
+        self.m_pos = nx.spring_layout(G, seed=42, weight='weight')
+        # self.m_pos = nx.kamada_kawai_layout(G, weight='weight')
         # self.m_pos = nx.fruchterman_reingold_layout(G, weight='weight')
+
+        print("Number of nodes:", G.number_of_nodes())
+        print("Number of edges:", G.number_of_edges())
 
         print("Finished parsing")
         return my_graph
@@ -208,7 +246,6 @@ class Parser:
         edge_labels = {(u, v): f"{data['weight']:.3f}" for u, v, data in self.m_G.edges(data=True)}
         nx.draw_networkx_edge_labels(self.m_G, self.m_pos, edge_labels=edge_labels, font_color='grey', font_size=3)
 
-
         # Desenhar circulo à volta da posicao inicial
         if startPos:
             if startPos in self.m_pos:
@@ -236,3 +273,6 @@ class Parser:
             return variable[0] if variable else None
         else:
             return variable
+        
+    def str_to_bool(self, s):
+        return ast.literal_eval(s)

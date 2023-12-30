@@ -1,5 +1,8 @@
+import math
 from Package import Package
 from datetime import timedelta
+
+from Stats import Stats
 
 # TOCONSIDER: se passar por nodo onde há encomenda, não entrega logo
 #               Posso meter a fazer isso, mas quando acrescentarmos delay de entregar (entrega em si demora tempo / cliente pode só querer entrega a partir de x horas depois) pode impedir que se faça entrega no destino final para que se estava a ir
@@ -27,50 +30,77 @@ class AlgInformed:
         return res
     
     # decidir qual o melhor transporte de partida, tendo em conta o peso e volume das encomendas
-    def get_transport(self, Nodes, stats):
+    def get_transport(self, Nodes):
         total_weight = 0
         for Node in Nodes.values():
             total_weight += Node.m_weight
-        for transport, weight in stats.max_peso.items():
+        for transport, weight in Stats.max_peso.items():
             if  total_weight <= weight:
                 return (transport, total_weight)
         return None
         # se não houver transporte que dê, retorna que não é possível
     
     # calcular rating para horario em que estafeta entrega pacote
-    def calculateRating(self, currTime, location, packages, stats):
+    def calculateRating(self, currTime, location, packages):
         delay = (currTime - packages[location].getEndTime()).total_seconds() / 60 # reduz-se o deliver delay que já foi acrescentado no currTime
         # print (f'Obtained delay: {delay} from endTime: {packages[location].getEndTime().strftime("%Y-%m-%d %H:%M:%S")} and currTime: {currTime.strftime("%Y-%m-%d %H:%M:%S")}')
-        for (fixedDelay,rating) in stats.rating_decr_atraso:
+        for (fixedDelay,rating) in Stats.rating_decr_atraso:
             if delay <= fixedDelay:
                 return rating
         return 0 # se entrega for depois de 60 minutos é rating 0
-    
-     # Args:
-     #recebe grafo, 
-     # nome do nodo inicial, 
-     # set de nomes de locais de entrega, 
-    def procura_informada(self, graph, startPlace, startTime, packages, stats, path_func):
-        
-        # lista com nodos por visitar, ordenado por proximidade de data limite
-        package_visit_order = self.calculate_heuristic_urgency(graph,packages)
 
-        #obter transporte adequado (para peso e volume)
-        result = self.get_transport(packages,stats)
+    def procura_informada(self, graph, startPlace, startTime, packages, path_func):
+        best_path = []
+        best_rating = 0
+        best_cost = math.inf
+        best_nodesVisited = 0
+        best_transport = None
+        # obter transporte
+        result = self.get_transport(packages)
         if not result: # se não houver veículo que consiga transportar todos os pacotes
             print("No vehicle can hold that many packages due to weight/volume")
             return None
         else:
-            (transport,total_weight) = result
-            print(f"Got transport {transport}") 
-            # print(f"with weight {total_weight}")
+            (vehicle,total_weight) = result
         
+        for transport in Stats.transportes[Stats.transportes.index(vehicle): ]:
+            #calcular percurso para cada transporte que aguenta com os pacotes todos
+            resultFunc = self.procura_informada_aux(graph, startPlace, startTime, packages, transport, total_weight, path_func)
+            if not resultFunc:
+                print(f'Path does not exist for {transport}!')
+            else:
+                (finalPath,totalCost, average_rating, nodesVisited) = resultFunc
+                # print(f"For iter {transport} {(finalPath, len(nodesVisited), totalCost, average_rating)}\n")
+
+                if average_rating >= best_rating and totalCost < best_cost:
+                    best_path = finalPath
+                    best_cost = totalCost
+                    best_rating = average_rating
+                    best_nodesVisited = nodesVisited
+                    best_transport = transport
+
+        if best_cost == math.inf:
+            return None
+        else:
+            return (best_path,best_cost,best_rating,best_nodesVisited, best_transport)
+        
+     # Args:
+     #recebe grafo, 
+     # nome do nodo inicial, 
+     # set de nomes de locais de entrega, 
+    def procura_informada_aux(self, graph, startPlace, startTime, packages, transport, total_weight, path_func):
+        
+        # lista com nodos por visitar, ordenado por proximidade de data limite
+        package_visit_order = self.calculate_heuristic_urgency(graph,packages)
+
         currTime = startTime # tempo inicial
-        currVelocity = stats.base_vel[transport] - (total_weight * stats.vel_decr_peso[transport]) # velocidade inicial
+        currVelocity = Stats.base_vel[transport] - (total_weight * Stats.vel_decr_peso[transport]) # velocidade inicial
         ratings = [] # lista de ratings acumulados de entregas da pacotes
         errorFlag = False
         finalPath = [startPlace]
         totalCost = 0
+        nodesVisited = set() # only necessary to count visited nodes
+
         currNode = startPlace
 
         while len(package_visit_order) > 0 and not errorFlag:
@@ -80,21 +110,21 @@ class AlgInformed:
             prevNode = currNode
             currNode = package_visit_order.pop(0).getLocation() # procurar nodo com encomenda mais urgente da lista
 
-            result = path_func(graph,prevNode,currNode)
+            result = path_func(graph,prevNode,currNode, transport)
             if result is not None :
-                (path,distTraveled) = result 
+                (path,distTraveled, visited) = result 
                 # print(f'Got from {path_func.__name__} path: {path} dist: {distTraveled}')
-
+                nodesVisited = nodesVisited.union(visited) # nodos visitados
                 path.pop(0) # removemos a primeira posição do path obtido, porque já consta na lista final
                 finalPath.extend(path) # acrescentar caminho desta iteração ao caminho final
-                totalCost += distTraveled * stats.consumo[transport] # somar C02 na deslocação desta iteração ao total
+                totalCost += distTraveled * Stats.consumo[transport] # somar C02 na deslocação desta iteração ao total
                 timeBetweenDeliveries = timedelta(minutes= (distTraveled / currVelocity)) # tempo decorrido nesta iteração
                 # print(f"timeBetweenDeliveries: {timeBetweenDeliveries.total_seconds() / 60}")
                 currTime = max(packages[currNode].getStartTime(), currTime + timeBetweenDeliveries) # tempo máximo entre: tempo desde entrega anterior até agora ou tempo inicial de entrega para cliente; + tempo fixo de entregar encomenda
-                rating = self.calculateRating(currTime,currNode,packages, stats) # obter rating baseado em tempo de atraso da entrega
-                currTime = currTime + timedelta(minutes=stats.deliver_delay) # acrescentar tempo fixo de entrega em qualquer sitio
+                rating = self.calculateRating(currTime,currNode,packages) # obter rating baseado em tempo de atraso da entrega
+                currTime = currTime + timedelta(minutes=Stats.deliver_delay) # acrescentar tempo fixo de entrega em qualquer sitio
                 ratings.append(rating) # acrescentar rating aos ratings 
-                currVelocity += stats.vel_decr_peso[transport] * packages[currNode].getWeight() # aumentar velocidade com redução de peso da entrega
+                currVelocity += Stats.vel_decr_peso[transport] * packages[currNode].getWeight() # aumentar velocidade com redução de peso da entrega
 
             else :
                 errorFlag = True
@@ -107,20 +137,19 @@ class AlgInformed:
             # print(f"Final CurrConsumption: {totalCost}")
             # print(f"Final CurrRatings {ratings}")
 
-            return (finalPath,totalCost, average_rating)
+            return (finalPath,totalCost, average_rating, nodesVisited)
 
         print('Path does not exist!')
         return None
     
-    def procura_greedy(self, graph, start, end):
+    def procura_greedy(self, graph, start, end, transport):
         # open_list é uma lista de nodos visitados, mas com vizinhos
         # closed_list é uma lista de nodos visitados
         # e todos os seus vizinhos também já o foram
         open_list = set([start])
         closed_list = set([])
+        nodesVisited = set() #apenas para estatísticas
 
-        # parents é um dicionário que mantém o antecessor de um nodo
-        # começa com start
         parents = {}
         parents[start] = start
 
@@ -138,7 +167,7 @@ class AlgInformed:
                 print('Cannot deliver package!')
                 return None
 
-            # print("picked",n)
+            nodesVisited.add(n)
             # se o nodo corrente é o último a entregar
             # reconstruir o caminho a partir desse nodo até ao start
             # seguindo o antecessor
@@ -153,13 +182,12 @@ class AlgInformed:
 
                 reconst_path.reverse()
 
-                return (reconst_path, graph.calcula_custo(reconst_path))
+                return (reconst_path, graph.calcula_custo(reconst_path), nodesVisited)
 
             # para todos os vizinhos  do nodo corrente
-            for (m, peso) in graph.getNeighbours(n):
-                # Se o nodo corrente nao esta na open nem na closed list
-                # adiciona-lo à open_list e marcar o antecessor
-                if m not in open_list and m not in closed_list:
+            for (m, edge_attributes) in graph.getNeighbours(n): 
+                (weight, is_open, vehicles) = edge_attributes
+                if m not in open_list and m not in closed_list and is_open and transport in vehicles: # só considera rua se estiver aberta e veículo puder circular nela
                     open_list.add(m)
                     parents[m] = n
 
@@ -171,17 +199,18 @@ class AlgInformed:
         print('Path does not exist!')
         return None
     
-    def procura_aStar(self, graph, start, end):
+    def procura_aStar(self, graph, start, end, transport):
         # open_list is a list of nodes which have been visited, but who's neighbors
         # haven't all been inspected, starts off with the start node
         # closed_list is a list of nodes which have been visited
         # and who's neighbors have been inspected
         open_list = {start}
         closed_list = set([])
+        nodesVisited = set() #apenas para estatísticas
 
         # g contains current distances from start_node to all other nodes
         # the default value (if it's not found in the map) is +infinity
-        g = {}  ##  g é apra substiruir pelo peso  ???
+        g = {}
 
         g[start] = 0
 
@@ -202,6 +231,7 @@ class AlgInformed:
                 print('Cannot deliver package!')
                 return None
 
+            nodesVisited.add(n)
             # if the current node is the stop_node
             # then we begin reconstructin the path from it to the start_node
             if n == end:
@@ -215,13 +245,12 @@ class AlgInformed:
 
                 reconst_path.reverse()
 
-                return (reconst_path, graph.calcula_custo(reconst_path))
+                return (reconst_path, graph.calcula_custo(reconst_path), nodesVisited)
 
             # for all neighbors of the current node do
-            for (m, weight) in graph.getNeighbours(n):  # definir função getneighbours  tem de ter um par nodo peso
-                # if the current node isn't in both open_list and closed_list
-                # add it to open_list and note n as it's parent
-                if m not in open_list and m not in closed_list:
+            for (m, edge_attributes) in graph.getNeighbours(n): # 
+                (weight, is_open, vehicles) = edge_attributes
+                if m not in open_list and m not in closed_list and is_open and transport in vehicles: # só considera rua se estiver aberta e veículo puder circular nela
                     open_list.add(m)
                     parents[m] = n
                     g[m] = g[n] + weight
@@ -229,7 +258,7 @@ class AlgInformed:
                 # otherwise, check if it's quicker to first visit n, then m
                 # and if it is, update parent data and g data
                 # and if the node was in the closed_list, move it to open_list
-                else:
+                elif is_open and transport in vehicles:
                     if g[m] > g[n] + weight:
                         g[m] = g[n] + weight
                         parents[m] = n

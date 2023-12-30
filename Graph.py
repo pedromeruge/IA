@@ -1,10 +1,6 @@
 
 import math
-from queue import Queue
-
-import networkx as nx  # biblioteca de tratamento de grafos necessária para desnhar graficamente o grafo
-import matplotlib.pyplot as plt  # idem
-
+from Stats import Stats
 from Node import Node
 
 
@@ -55,7 +51,7 @@ class Graph:
     #   adicionar   aresta no grafo
     
     # dist is distance between nodes
-    def add_edge(self, n1, n2, dist):
+    def add_edge(self, n1, n2, dist, is_open=True, vehicles=Stats.transportes):
         node1 = n1.getName()
         node2 = n2.getName()
 
@@ -71,10 +67,12 @@ class Graph:
             self.m_nodes.append(n2)
             self.m_graph[node2] = []
 
-        self.m_graph[node1].append((node2, dist))  # poderia ser n1 para trabalhar com nodos no grafo
+        # distance of edge, is road open, vehicles allowed in this road
+        edge_attributes = (dist, is_open, vehicles)
+        self.m_graph[node1].append((node2, edge_attributes))  # poderia ser n1 para trabalhar com nodos no grafo
 
         if not self.m_directed:
-              self.m_graph[node2].append((node1, dist))
+              self.m_graph[node2].append((node1, edge_attributes))
 
     def add_heuristica(self, n, valor):
         n1 = Node(n)
@@ -105,10 +103,10 @@ class Graph:
     def get_arc_cost(self, node1, node2):
         custoT = math.inf
         a = self.m_graph[node1]  # lista de arestas para aquele nodo
-        for (nodo, custo) in a:
+        for (nodo, edge_attributes) in a:
+            (custo,_,_) = edge_attributes
             if nodo == node2:
                 custoT = custo
-
         return custoT
 
     #  dado um caminho calcula o seu custo
@@ -121,25 +119,3 @@ class Graph:
             custo = custo + self.get_arc_cost(teste[i], teste[i + 1])
             i = i + 1
         return custo
-
-    # desenha grafo  modo grafico
-    def desenha(self):
-        ##criar lista de vertices
-        lista_v = self.m_nodes
-        lista_a = []
-        g = nx.Graph()
-        for nodo in lista_v:
-            n = nodo.getName()
-            g.add_node(n)
-            for (adjacente, peso) in self.m_graph[n]:
-                lista = (n, adjacente)
-                # lista_a.append(lista)
-                g.add_edge(n, adjacente, weight=peso)
-
-        pos = nx.spring_layout(g)
-        nx.draw_networkx(g, pos, with_labels=True, font_weight='bold')
-        labels = nx.get_edge_attributes(g, 'weight')
-        nx.draw_networkx_edge_labels(g, pos, edge_labels=labels)
-
-        plt.draw()
-        plt.show()

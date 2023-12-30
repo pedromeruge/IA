@@ -1,108 +1,108 @@
-Node1,Node2,Weight
-Rua da Esperanca, Rua do Progresso, 150
-Rua da Esperanca, Avenida da Paz, 80
-Rua da Esperanca, Rua do Bairro, 120
-Rua do Progresso, Rua da Esperanca, 150
-Rua do Progresso, Avenida da Paz, 100
-Rua do Progresso, Rua do Bairro, 180
-Avenida da Paz, Rua da Esperanca, 80
-Avenida da Paz, Rua do Progresso, 100
-Avenida da Paz, Rua do Bairro, 200
-Rua do Bairro, Rua da Esperanca, 120
-Rua do Bairro, Rua do Progresso, 180
-Rua do Bairro, Avenida da Paz, 250
-Rua da Felicidade, Avenida Central, 200
-Rua da Felicidade, Praça da Liberdade, 150
-Rua da Felicidade, Rua das Flores, 120
-Avenida Central, Rua da Felicidade, 200
-Avenida Central, Praça da Liberdade, 220
-Avenida Central, Rua das Flores, 280
-Praça da Liberdade, Rua da Felicidade, 150
-Praça da Liberdade, Avenida Central, 220
-Praça da Liberdade, Rua das Flores, 100
-Rua das Flores, Rua da Felicidade, 120
-Rua das Flores, Avenida Central, 280
-Rua das Flores, Praça da Liberdade, 100
-Rua do Sol, Avenida do Mar, 140
-Rua do Sol, Rua dos Amores, 80
-Rua do Sol, Praça das Estrelas, 100
-Avenida do Mar, Rua do Sol, 140
-Avenida do Mar, Rua dos Amores, 100
-Avenida do Mar, Praça das Estrelas, 180
-Rua dos Amores, Rua do Sol, 380
-Rua dos Amores, Avenida do Mar, 100
-Rua dos Amores, Praça das Estrelas, 150
-Praça das Estrelas, Rua do Sol, 100
-Praça das Estrelas, Avenida do Mar, 180
-Praça das Estrelas, Rua dos Amores, 150
-Rua da Lua, Rua da Esperanca, 140
-Rua da Lua, Rua do Progresso, 120
-Rua da Lua, Avenida da Paz, 100
-Avenida Central, Rua da Esperanca, 180
-Avenida Central, Rua do Progresso, 250
-Avenida Central, Avenida da Paz, 120
-Avenida Central, Rua da Felicidade, 150
-Avenida Central, Praça da Liberdade, 80
-Avenida Central, Rua das Flores, 220
-Avenida Central, Rua do Sol, 140
-Avenida Central, Avenida do Mar, 160
-Avenida Central, Rua dos Amores, 100
-Rua da Esperanca, Rua do Sol, 100
-Rua da Esperanca, Avenida do Mar, 180
-Rua da Esperanca, Rua dos Amores, 120
-Rua da Esperanca, Praça das Estrelas, 150
-Rua da Esperanca, Rua da Lua, 140
-Rua Nova, Avenida Central, 190
-Rua Nova, Rua da Esperança, 50
-Rua Nova, Rua do Comércio, 180
-Avenida Larga, Rua da Esperança, 150
-Avenida Larga, Avenida Central, 30
-Avenida Larga, Largo da Madre de Deus, 230
-Travessa do Bairro, Rua da Esperança, 130
-Travessa do Bairro, Rua do Comércio, 350
-Travessa do Bairro, Rua Nova, 540
-Largo do Mercado, Largo da Madre de Deus, 150
-Largo do Mercado, Rua Nova, 140
-Largo do Mercado, Avenida Larga, 302
-Rua do Porto, Rua da Esperança, 305
-Rua do Porto, Avenida Central, 130
-Rua do Porto, Travessa do Bairro, 201
-Avenida Nova, Rua do Comércio, 110
-Avenida Nova, Largo do Mercado, 202
-Avenida Nova, Rua do Porto, 330
-Rua do Campo, Rua da Esperança, 150
-Rua do Campo, Rua Nova, 240
-Rua do Campo, Largo do Mercado, 330
-Avenida Velha, Rua do Comércio, 280
-Avenida Velha, Avenida Nova, 20
-Avenida Velha, Largo do Mercado, 30
-Rua da Alegria, Avenida Larga, 502
-Rua da Alegria, Rua da Felicidade, 260
-Rua da Alegria, Praça da Liberdade, 404
-Rua das Flores, Avenida Larga, 490
-Rua das Flores, Rua da Felicidade, 180
-Rua das Flores, Praça da Liberdade, 50
-Travessa da Paz, Avenida Larga, 150
-Travessa da Paz, Rua da Felicidade, 120
-Travessa da Paz, Praça da Liberdade, 50
-Avenida da Paz, Avenida Larga, 120
-Avenida da Paz, Rua da Felicidade, 550
-Avenida da Paz, Praça da Liberdade, 210
-Rua do Amor, Avenida Larga, 40
-Rua do Amor, Rua da Felicidade, 205
-Rua do Amor, Praça da Liberdade, 680
-Rua da Serenidade, Rua do Porto, 140
-Rua da Serenidade, Avenida da Paz, 480
-Rua da Serenidade, Travessa do Bairro, 600
-Avenida do Progresso, Rua do Porto, 100
-Avenida do Progresso, Avenida da Paz, 120
-Avenida do Progresso, Travessa do Bairro, 280
-Travessa da Harmonia, Rua do Porto, 150
-Travessa da Harmonia, Avenida da Paz, 140
-Travessa da Harmonia, Travessa do Bairro, 370
-Rua da União, Rua do Porto, 120
-Rua da União, Avenida da Paz, 140
-Rua da União, Travessa do Bairro, 907
-Avenida da Prosperidade, Rua do Porto, 290
-Avenida da Prosperidade, Avenida da Paz, 470
-Avenida da Prosperidade, Travessa do Bairro, 120
+Node1,Node2,Weight,Open,Bicycle,Motorcycle,Car,Truck
+Rua da Esperanca, Rua do Progresso, 150, True, True, True, True, True
+Rua da Esperanca, Avenida da Paz, 80, True, True, True, True, True
+Rua da Esperanca, Rua do Bairro, 120, True, True, True, True, True
+Rua do Progresso, Rua da Esperanca, 150, True, True, True, True, True
+Rua do Progresso, Avenida da Paz, 100, True, True, True, True, True
+Rua do Progresso, Rua do Bairro, 180, True, True, True, True, True
+Avenida da Paz, Rua da Esperanca, 80, True, True, True, True, True
+Avenida da Paz, Rua do Progresso, 100, True, True, True, True, True
+Avenida da Paz, Rua do Bairro, 200, True, True, True, True, True
+Rua do Bairro, Rua da Esperanca, 120, True, True, True, True, True
+Rua do Bairro, Rua do Progresso, 180, True, True, True, True, True
+Rua do Bairro, Avenida da Paz, 250, True, True, True, True, True
+Rua da Felicidade, Avenida Central, 200, True, True, True, True, True
+Rua da Felicidade, Praça da Liberdade, 150, True, True, True, True, True
+Rua da Felicidade, Rua das Flores, 120, True, True, True, True, True
+Avenida Central, Rua da Felicidade, 200, True, True, True, True, True
+Avenida Central, Praça da Liberdade, 220, True, True, True, True, True
+Avenida Central, Rua das Flores, 280, True, True, True, True, True
+Praça da Liberdade, Rua da Felicidade, 150, True, True, True, True, True
+Praça da Liberdade, Avenida Central, 220, True, True, True, True, True
+Praça da Liberdade, Rua das Flores, 100, True, True, True, True, True
+Rua das Flores, Rua da Felicidade, 120, True, True, True, True, True
+Rua das Flores, Avenida Central, 280, True, True, True, True, True
+Rua das Flores, Praça da Liberdade, 100, True, True, True, True, True
+Rua do Sol, Avenida do Mar, 140, True, True, True, True, True
+Rua do Sol, Rua dos Amores, 80, True, True, True, True, True
+Rua do Sol, Praça das Estrelas, 100, True, True, True, True, True
+Avenida do Mar, Rua do Sol, 140, True, True, True, True, True
+Avenida do Mar, Rua dos Amores, 100, True, True, True, True, True
+Avenida do Mar, Praça das Estrelas, 180, True, True, True, True, True
+Rua dos Amores, Rua do Sol, 380, True, True, True, True, True
+Rua dos Amores, Avenida do Mar, 100, True, True, True, True, True
+Rua dos Amores, Praça das Estrelas, 150, True, True, True, True, True
+Praça das Estrelas, Rua do Sol, 100, True, True, True, True, True
+Praça das Estrelas, Avenida do Mar, 180, True, True, True, True, True
+Praça das Estrelas, Rua dos Amores, 150, True, True, True, True, True
+Rua da Lua, Rua da Esperanca, 140, True, True, True, True, True
+Rua da Lua, Rua do Progresso, 120, True, True, True, True, True
+Rua da Lua, Avenida da Paz, 100, True, True, True, True, True
+Avenida Central, Rua da Esperanca, 180, True, True, True, True, True
+Avenida Central, Rua do Progresso, 250, True, True, True, True, True
+Avenida Central, Avenida da Paz, 120, True, True, True, True, True
+Avenida Central, Rua da Felicidade, 150, True, True, True, True, True
+Avenida Central, Praça da Liberdade, 80, True, True, True, True, True
+Avenida Central, Rua das Flores, 220, True, True, True, True, True
+Avenida Central, Rua do Sol, 140, True, True, True, True, True
+Avenida Central, Avenida do Mar, 160, True, True, True, True, True
+Avenida Central, Rua dos Amores, 100, True, True, True, True, True
+Rua da Esperanca, Rua do Sol, 100, True, True, True, True, True
+Rua da Esperanca, Avenida do Mar, 180, True, True, True, True, True
+Rua da Esperanca, Rua dos Amores, 120, True, True, True, True, True
+Rua da Esperanca, Praça das Estrelas, 150, True, True, True, True, True
+Rua da Esperanca, Rua da Lua, 140, True, True, True, True, True
+Rua Nova, Avenida Central, 190, True, True, True, True, True
+Rua Nova, Rua da Esperanca, 50, True, True, True, True, True
+Rua Nova, Rua do Comércio, 180, True, True, True, True, True
+Avenida Larga, Rua da Esperanca, 150, True, True, True, True, True
+Avenida Larga, Avenida Central, 100, True, True, True, True, True
+Avenida Larga, Largo da Madre de Deus, 230, True, True, True, True, True
+Travessa do Bairro, Rua da Esperanca, 130, False, True, True, False, False
+Travessa do Bairro, Rua do Comércio, 350, True, True, True, True, True
+Travessa do Bairro, Rua Nova, 540, True, True, True, True, True
+Largo do Mercado, Largo da Madre de Deus, 150, True, True, True, True, True
+Largo do Mercado, Rua Nova, 140, True, True, True, True, True
+Largo do Mercado, Avenida Larga, 302, True, True, True, True, True
+Rua do Porto, Rua da Esperanca, 305, True, True, True, True, True
+Rua do Porto, Avenida Central, 130, True, True, True, True, True
+Rua do Porto, Travessa do Bairro, 201, True, True, True, True, True
+Avenida Nova, Rua do Comércio, 110, True, True, True, True, True
+Avenida Nova, Largo do Mercado, 202, True, True, True, True, True
+Avenida Nova, Rua do Porto, 330, True, True, True, True, True
+Rua do Campo, Rua da Esperanca, 150, True, True, True, True, True
+Rua do Campo, Rua Nova, 240, True, True, True, True, True
+Rua do Campo, Largo do Mercado, 330, True, True, True, True, True
+Avenida Velha, Rua do Comércio, 280, True, True, True, True, True
+Avenida Velha, Avenida Nova, 20, True, True, True, True, True
+Avenida Velha, Largo do Mercado, 30, True, True, True, True, True
+Rua da Alegria, Avenida Larga, 502, True, True, True, True, True
+Rua da Alegria, Rua da Felicidade, 260, True, True, True, True, True
+Rua da Alegria, Praça da Liberdade, 404, True, True, True, True, True
+Rua das Flores, Avenida Larga, 490, True, True, True, True, True
+Rua das Flores, Rua da Felicidade, 180, True, True, True, True, True
+Rua das Flores, Praça da Liberdade, 50, True, True, True, True, True
+Travessa da Paz, Avenida Larga, 150, True, True, True, True, True
+Travessa da Paz, Rua da Felicidade, 120, True, True, True, True, True
+Travessa da Paz, Praça da Liberdade, 50, True, True, True, True, True
+Avenida da Paz, Avenida Larga, 120, True, True, True, True, True
+Avenida da Paz, Rua da Felicidade, 550, True, True, True, True, True
+Avenida da Paz, Praça da Liberdade, 210, True, True, True, True, True
+Rua do Amor, Avenida Larga, 40, True, True, True, True, True
+Rua do Amor, Rua da Felicidade, 205, True, True, True, True, True
+Rua do Amor, Praça da Liberdade, 680, True, True, True, True, True
+Rua da Serenidade, Rua do Porto, 140, True, True, True, True, True
+Rua da Serenidade, Avenida da Paz, 480, True, True, True, True, True
+Rua da Serenidade, Travessa do Bairro, 600, False, True, True, True, True
+Avenida do Progresso, Rua do Porto, 100, True, True, True, True, True
+Avenida do Progresso, Avenida da Paz, 120, True, True, True, True, True
+Avenida do Progresso, Travessa do Bairro, 280, False, True, True, True, True
+Travessa da Harmonia, Rua do Porto, 150, True, True, True, True, True
+Travessa da Harmonia, Avenida da Paz, 140, True, True, True, True, True
+Travessa da Harmonia, Travessa do Bairro, 370, False, True, True, True, True
+Rua da União, Rua do Porto, 120, True, True, True, True, True
+Rua da União, Avenida da Paz, 140, True, True, True, True, True
+Rua da União, Travessa do Bairro, 907, True, True, True, True, True
+Avenida da Prosperidade, Rua do Porto, 290, True, True, True, True, True
+Avenida da Prosperidade, Avenida da Paz, 470, True, True, True, True, True
+Avenida da Prosperidade, Travessa do Bairro, 120, True, True, True, True, True
