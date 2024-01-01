@@ -193,4 +193,31 @@ class AlgSemiInformed:
     
     def procura_DFS(self,graph,start,end, transport):
         return self.procura_DFS_call(graph,start,end, transport, [], set())
+    
+    
+    def procura_UCS_call(self, graph, start, end, transport, path=[], cost=0, visited=set()):
+        path.append(start)  # caminho até ao destino
+        visited.add(start)  # nodos visitados
+
+        if start == end:  # chegou ao destino
+            # calcular o custo do caminho (função calcula custo)
+            custoT = graph.calcula_custo(path)
+            return path, custoT, visited
+
+        neighbors = graph.getSpecificNode(start)
+        neighbors.sort(key=lambda x: x[1][0])  # Ordenar os nodes por custo
+
+        for (adjacente, edge_attributes) in neighbors:
+            (dist, is_open, vehicles) = edge_attributes
+            if adjacente not in visited and is_open and transport in vehicles:
+                new_cost = cost + dist
+                resultado = self.procura_UCS_call(graph, adjacente, end, transport, path, new_cost, visited)
+                if resultado is not None:
+                    return resultado
+
+        path.pop()  # se não encontrar, remover o que está no caminho
+        return None
+
+    def procura_UCS(self, graph, start, end, transport):
+        return self.procura_UCS_call(graph, start, end, transport, [], 0, set())
 
