@@ -59,8 +59,8 @@ def main():
     result = semiInformed.procura_informada(g,startPos, startTime, package_locations, semiInformed.procura_UCS)
     if result is not None:
         (path,custo, average_rating, nodesVisited, transport) = result
-        print (f"Caminho:\n {path}\nCusto C02 g/km: {custo}, RatingFinal: {average_rating}, NodesVisited {len(nodesVisited)}, BestTransport: {transport}")
-        # print (f"Custo C02 g/km: {custo}, RatingFinal: {average_rating}, NodesVisited {len(nodesVisited)}, BestTransport: {transport}")
+        # print (f"Caminho:\n {path}\nCusto C02 g/km: {custo}, RatingFinal: {average_rating}, NodesVisited {len(nodesVisited)}, BestTransport: {transport}")
+        print (f"Custo C02 g/km: {custo}, RatingFinal: {average_rating}, NodesVisited {len(nodesVisited)}, BestTransport: {transport}")
     else:
         print("Error calculating Semi-informed UCS search") 
 
@@ -82,10 +82,8 @@ def main():
     else:
         print("Error calculating Bad informed aStar search") 
 
-    wantedRating = 5
-
     print("Informed greedy search")
-    result = informed2.procura_informada(g,startPos, startTime, 5, package_locations, informed2.procura_greedy)
+    result = informed2.procura_informada(g,startPos, startTime, package_locations, informed2.procura_greedy)
     if result is not None:
         (path,custo, avg_rating, nodesVisited, transport) = result
         # print (f"Caminho:\n {path}\nCusto C02 g/km: {custo}, RatingFinal: {avg_rating},  NodesVisited {len(nodesVisited)}, BestTransport: {transport}")
@@ -94,11 +92,11 @@ def main():
         print("Error calculating Informed greedy search") 
 
     print("Informed aStar search")
-    result = informed2.procura_informada(g,startPos, startTime, 5, package_locations, informed2.procura_aStar)
+    result = informed2.procura_informada(g,startPos, startTime, package_locations, informed2.procura_aStar)
     if result is not None:
         (path,custo, avg_rating, nodesVisited, transport) = result
-        print (f"Caminho:\n {path}\nCusto C02 g/km: {custo}, RatingFinal: {avg_rating},  NodesVisited {len(nodesVisited)}, BestTransport: {transport}")
-        # print (f"Custo C02 g/km: {custo}, RatingFinal: {avg_rating}, NodesVisited {len(nodesVisited)}, BestTransport: {transport}")
+        # print (f"Caminho:\n {path}\nCusto C02 g/km: {custo}, RatingFinal: {avg_rating},  NodesVisited {len(nodesVisited)}, BestTransport: {transport}")
+        print (f"Custo C02 g/km: {custo}, RatingFinal: {avg_rating}, NodesVisited {len(nodesVisited)}, BestTransport: {transport}")
     else:
         print("Error calculating Informed aStar search") 
 

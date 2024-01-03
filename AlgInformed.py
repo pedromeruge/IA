@@ -143,9 +143,7 @@ class AlgInformed:
         return None
     
     def procura_greedy(self, graph, start, end, transport):
-        # open_list é uma lista de nodos visitados, mas com vizinhos
-        # closed_list é uma lista de nodos visitados
-        # e todos os seus vizinhos também já o foram
+
         open_list = set([start])
         closed_list = set([])
         nodesVisited = set() #apenas para estatísticas
@@ -168,9 +166,7 @@ class AlgInformed:
                 return None
 
             nodesVisited.add(n)
-            # se o nodo corrente é o último a entregar
-            # reconstruir o caminho a partir desse nodo até ao start
-            # seguindo o antecessor
+
             if n == end:
                 reconst_path = []
 
@@ -200,10 +196,7 @@ class AlgInformed:
         return None
     
     def procura_aStar(self, graph, start, end, transport):
-        # open_list is a list of nodes which have been visited, but who's neighbors
-        # haven't all been inspected, starts off with the start node
-        # closed_list is a list of nodes which have been visited
-        # and who's neighbors have been inspected
+
         open_list = {start}
         closed_list = set([])
         nodesVisited = set() #apenas para estatísticas
@@ -219,10 +212,9 @@ class AlgInformed:
         parents[start] = start
         #n = None
         while len(open_list) > 0:
-            # find a node with the lowest value of f() - evaluation function
+
             n = None
 
-            # find a node with the lowest value of f() - evaluation function
             for v in open_list:
                 ##if n == None or g[v] + self.getH(v) < g[n] + self.getH(n):  # heuristica ver.....
                 if n == None or g[v] + self.calculate_node_heuristic(graph,v,end) < g[n] + self.calculate_node_heuristic(graph,n,end):  # heuristica ver.....

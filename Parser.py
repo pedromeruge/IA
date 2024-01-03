@@ -1,4 +1,5 @@
 import ast
+from collections import defaultdict
 from Stats import Stats
 import osmnx as ox
 import pandas as pd
@@ -14,6 +15,7 @@ class Parser:
         self.m_G = None
         self.m_pos = None
         self.m_encomendas = None
+        self.m_duplicated = defaultdict(int) # keep track of repeated street_names
  
     #map location -> package 
     # NOTE: package also includes location, but easier to acess like this
@@ -91,10 +93,9 @@ class Parser:
 
         my_graph = Graph()
         G = nx.Graph()
-        i = 0
         for edge in map_graph.edges(data=True):
             node1, node2, data = edge
-            street_name = data.get("name", "?" + str(i))
+            street_name = data.get("name", "?")
             weight = data.get("length",0)
             is_open = data.get("access", "yes") == "yes" #rua fechada ou não
             car_allowed = data.get("motorcar", "yes")  == "yes"
@@ -105,10 +106,7 @@ class Parser:
 
             x1, y1 = (map_graph.nodes[node1]['x'], map_graph.nodes[node1]['y'])
             x2, y2 = (map_graph.nodes[node2]['x'], map_graph.nodes[node2]['y'])
-            middle_node = str(self.get_first_element(street_name))
-
-            if middle_node.find("?") >= 0: # utilizado para ter nomes diferentes nas ruas todas
-                i = i+1
+            middle_node = self.handle_duplicates(str(self.get_first_element(street_name)))
 
             # criamos um novo ponto intermedio, com o nome da rua
             x3, y3 = (x1+x2)/2, (y1+y2)/2
@@ -143,9 +141,9 @@ class Parser:
             my_graph.add_edge(n1,n3, weight/2, is_open, vehicles)
             my_graph.add_edge(n3,n2, weight/2, is_open, vehicles)
 
-            # if (middle_node == "Rua da Universidade"):
-            #     print(f"{node1_name, middle_node, weight/2, is_open, vehicles}") 
-            #     print(f"{middle_node, node2_name, weight/2, is_open, vehicles}")     
+            if ("Rua Campo da Ribeira" in middle_node):
+                print(f"{node1_name, middle_node, weight/2, is_open, vehicles}") 
+                print(f"{middle_node, node2_name, weight/2, is_open, vehicles}")     
 
             my_graph.add_heuristica(node1_name, (x1,y1))
             my_graph.add_heuristica(node2_name, (x2,y2))
@@ -166,7 +164,7 @@ class Parser:
 
         print("Finished parsing")
 
-        ox.plot_graph(map_graph, node_size=0, edge_color="b", bgcolor="w", show=True)
+        # ox.plot_graph(map_graph, node_size=0, edge_color="b", bgcolor="w", show=True)
 
         return my_graph
 
@@ -288,3 +286,11 @@ class Parser:
         
     def str_to_bool(self, s):
         return ast.literal_eval(s)
+    
+    def handle_duplicates(self, street):
+        res_string = street
+        count = self.m_duplicated[street]
+        if count > 0:
+            res_string = f"{street}_{count}"
+        self.m_duplicated[street] += 1
+        return res_string
