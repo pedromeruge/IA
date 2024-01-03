@@ -216,7 +216,7 @@ class AlgSemiInformed:
 
             if current_node == end:
                 custoT = graph.calcula_custo(path)
-                return path, custoT, visited
+                return path, custoT, list(visited)
 
             neighbors = graph.getSpecificNode(current_node)
 
