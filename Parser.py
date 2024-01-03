@@ -233,7 +233,7 @@ class Parser:
         nx.draw(self.m_G, self.m_pos, with_labels=False, node_size=node_size, width=edge_width, edge_color=edge_color)
 
         # Draw nodes with labels for those whose names are not integers
-        nodes_to_label = [node for node in self.m_pos if not str(node).isdigit() and not "?" in str(node)]
+        nodes_to_label = [node for node in self.m_pos if self.node_to_draw(node)]
         labels = {node: node for node in nodes_to_label}  # Label with the node name itself
         nx.draw_networkx_labels(self.m_G, self.m_pos, labels=labels, font_size=8)
 
@@ -294,3 +294,9 @@ class Parser:
             res_string = f"{street}_{count}"
         self.m_duplicated[street] += 1
         return res_string
+
+    def node_to_draw(self, node):
+        name = str(node)
+        # res = not name.isdigit() and not "?" in name
+        res = not any(char.isdigit() for char in name) and not "?" in name
+        return res

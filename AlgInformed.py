@@ -11,8 +11,7 @@ class AlgInformed:
 
     # heurística baseada em limite de tempo mais proximo
     # retorna lista ordenado com ordem de visita de packages
-    def calculate_heuristic_urgency(self, graph, packages):
-        node_visit_order = []
+    def calculate_heuristic_urgency(self, packages):
         sorted_Nodes = sorted(packages.values(), key=Package.getEndTime) # sort Nodes by delivery urgency
         return sorted_Nodes
     
@@ -26,7 +25,7 @@ class AlgInformed:
     def calculate_node_heuristic(self, graph, curr, end):
         (currX,currY) = graph.get_heuristica(curr)
         (endX,endY) = graph.get_heuristica(end)
-        res = ((endX-currX)**2 + (endY-currY)**2) # otimiza-se não incluindo o sqrt, evita-se calculos a mais
+        res = math.sqrt((endX-currX)**2 + (endY-currY)**2) * 100000
         return res
     
     # decidir qual o melhor transporte de partida, tendo em conta o peso e volume das encomendas
@@ -53,7 +52,7 @@ class AlgInformed:
         best_path = []
         best_rating = 0
         best_cost = math.inf
-        best_nodesVisited = 0
+        order_of_visit = []
         best_transport = None
         # obter transporte
         result = self.get_transport(packages)
@@ -76,13 +75,14 @@ class AlgInformed:
                     best_path = finalPath
                     best_cost = totalCost
                     best_rating = average_rating
-                    best_nodesVisited = nodesVisited
                     best_transport = transport
+
+                order_of_visit += nodesVisited
 
         if best_cost == math.inf:
             return None
         else:
-            return (best_path,best_cost,best_rating,best_nodesVisited, best_transport)
+            return (best_path,best_cost,best_rating,order_of_visit, best_transport)
         
      # Args:
      #recebe grafo, 
@@ -91,7 +91,7 @@ class AlgInformed:
     def procura_informada_aux(self, graph, startPlace, startTime, packages, transport, total_weight, path_func):
         
         # lista com nodos por visitar, ordenado por proximidade de data limite
-        package_visit_order = self.calculate_heuristic_urgency(graph,packages)
+        package_visit_order = self.calculate_heuristic_urgency(packages)
 
         currTime = startTime # tempo inicial
         currVelocity = Stats.base_vel[transport] - (total_weight * Stats.vel_decr_peso[transport]) # velocidade inicial
@@ -99,7 +99,7 @@ class AlgInformed:
         errorFlag = False
         finalPath = [startPlace]
         totalCost = 0
-        nodesVisited = set() # only necessary to count visited nodes
+        node_visit_order = [] # statistics
 
         currNode = startPlace
 
@@ -114,7 +114,8 @@ class AlgInformed:
             if result is not None :
                 (path,distTraveled, visited) = result 
                 # print(f'Got from {path_func.__name__} path: {path} dist: {distTraveled}')
-                nodesVisited = nodesVisited.union(visited) # nodos visitados
+                node_visit_order += visited # nodos visitados
+
                 path.pop(0) # removemos a primeira posição do path obtido, porque já consta na lista final
                 finalPath.extend(path) # acrescentar caminho desta iteração ao caminho final
                 totalCost += distTraveled * Stats.consumo[transport] # somar C02 na deslocação desta iteração ao total
@@ -137,7 +138,7 @@ class AlgInformed:
             # print(f"Final CurrConsumption: {totalCost}")
             # print(f"Final CurrRatings {ratings}")
 
-            return (finalPath,totalCost, average_rating, nodesVisited)
+            return (finalPath,totalCost, average_rating, node_visit_order)
 
         print('Path does not exist!')
         return None
@@ -146,7 +147,7 @@ class AlgInformed:
 
         open_list = set([start])
         closed_list = set([])
-        nodesVisited = set() #apenas para estatísticas
+        order_of_visit = [] #apenas para estatísticas
 
         parents = {}
         parents[start] = start
@@ -165,7 +166,7 @@ class AlgInformed:
                 print('Cannot deliver package!')
                 return None
 
-            nodesVisited.add(n)
+            order_of_visit.append(n)
 
             if n == end:
                 reconst_path = []
@@ -178,7 +179,7 @@ class AlgInformed:
 
                 reconst_path.reverse()
 
-                return (reconst_path, graph.calcula_custo(reconst_path), nodesVisited)
+                return (reconst_path, graph.calcula_custo(reconst_path), order_of_visit)
 
             # para todos os vizinhos  do nodo corrente
             for (m, edge_attributes) in graph.getNeighbours(n): 
@@ -199,7 +200,7 @@ class AlgInformed:
 
         open_list = {start}
         closed_list = set([])
-        nodesVisited = set() #apenas para estatísticas
+        order_of_visit = [] #apenas para estatísticas
 
         # g contains current distances from start_node to all other nodes
         # the default value (if it's not found in the map) is +infinity
@@ -223,7 +224,7 @@ class AlgInformed:
                 print('Cannot deliver package!')
                 return None
 
-            nodesVisited.add(n)
+            order_of_visit.append(n)
             # if the current node is the stop_node
             # then we begin reconstructin the path from it to the start_node
             if n == end:
@@ -237,7 +238,7 @@ class AlgInformed:
 
                 reconst_path.reverse()
 
-                return (reconst_path, graph.calcula_custo(reconst_path), nodesVisited)
+                return (reconst_path, graph.calcula_custo(reconst_path), order_of_visit)
 
             # for all neighbors of the current node do
             for (m, edge_attributes) in graph.getNeighbours(n): # 

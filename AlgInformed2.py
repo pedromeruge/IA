@@ -75,7 +75,7 @@ class AlgInformed2:
         best_path = []
         best_rating = 0
         best_cost = math.inf
-        best_nodesVisited = 0
+        order_of_visit = []
         best_transport = None
         # obter transporte
         result = self.get_transport(packages)
@@ -101,6 +101,8 @@ class AlgInformed2:
                     best_nodesVisited = nodesVisited
                     best_transport = transport
 
+                order_of_visit += nodesVisited
+
         if best_cost == math.inf:
             return None
         else:
@@ -116,7 +118,7 @@ class AlgInformed2:
         errorFlag = False
         finalPath = [startPlace]
         totalCost = 0
-        nodesVisited = set()
+        order_of_visit = [] # estatisticas
         currNode = startPlace
 
         while (len(to_deliver) > 0 and not errorFlag):
@@ -128,7 +130,8 @@ class AlgInformed2:
             if result is not None :
                 (path,distTraveled, visited) = result
                 # print(f'Got from {path_func.__name__} path: {path} dist: {distTraveled}')
-                nodesVisited = nodesVisited.union(visited)
+                order_of_visit += visited
+
                 currNode = path[-1] # próximo nodo em que se começa, aka último nodo a que se chegou na iteração anterior
                 path.pop(0) # removemos a primeira posição do path obtido, porque já consta na lista final
                 finalPath.extend(path) #acrescentar caminho desta iteração ao caminho final
@@ -156,7 +159,7 @@ class AlgInformed2:
             # print(f"Final CurrConsumption: {totalCost}")
             # print(f"Final CurrRatings {ratings}")
 
-            return (finalPath,totalCost, average_rating, nodesVisited)
+            return (finalPath,totalCost, average_rating, order_of_visit)
         
         print('Path does not exist!')
         return None
@@ -165,7 +168,7 @@ class AlgInformed2:
 
         open_list = set([start])
         closed_list = set([])
-        nodesVisited = set() # apenas para estatísticas
+        order_of_visit = [] # apenas para estatísticas
 
         parents = {}
         parents[start] = start
@@ -183,7 +186,7 @@ class AlgInformed2:
                 print('Cannot deliver package!')
                 return None
 
-            nodesVisited.add(n)
+            order_of_visit.append(n)
             # se o nodo corrente é o último a entregar
             # reconstruir o caminho a partir desse nodo até ao start
             # seguindo o antecessor
@@ -198,7 +201,7 @@ class AlgInformed2:
 
                 reconst_path.reverse()
 
-                return (reconst_path, graph.calcula_custo(reconst_path), nodesVisited)
+                return (reconst_path, graph.calcula_custo(reconst_path), order_of_visit)
 
             # para todos os vizinhos do nodo corrente
             for (m, edge_attributes) in graph.getNeighbours(n):
@@ -217,7 +220,7 @@ class AlgInformed2:
 
         open_list = {start}
         closed_list = set([])
-        nodesVisited = set() # apenas para estatísticas
+        order_of_visit = [] # apenas para estatísticas
 
         g = {} 
 
@@ -240,7 +243,7 @@ class AlgInformed2:
                 print('Cannot deliver package!')
                 return None
 
-            nodesVisited.add(n)
+            order_of_visit.append(n)
             # if the current node is the stop_node
             # then we begin reconstructin the path from it to the start_node
             if n in to_deliver:
@@ -254,7 +257,7 @@ class AlgInformed2:
 
                 reconst_path.reverse()
 
-                return (reconst_path, graph.calcula_custo(reconst_path), nodesVisited)
+                return (reconst_path, graph.calcula_custo(reconst_path), order_of_visit)
 
             # for all neighbors of the current node do
             for (m, edge_attributes) in graph.getNeighbours(n):

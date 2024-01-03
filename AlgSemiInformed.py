@@ -8,8 +8,7 @@ class AlgSemiInformed:
 
     # heurística baseada em limite de tempo mais proximo
     # retorna lista ordenado com ordem de visita de packages
-    def calculate_heuristic_urgency(self, graph, packages):
-        node_visit_order = []
+    def calculate_heuristic_urgency(self, packages):
         sorted_Nodes = sorted(packages.values(), key=Package.getEndTime) # sort Nodes by delivery urgency
         return sorted_Nodes
     
@@ -43,7 +42,7 @@ class AlgSemiInformed:
         best_path = []
         best_rating = 0
         best_cost = math.inf
-        best_nodesVisited = 0
+        order_of_visit = [] #estatísticas
         best_transport = None
         # obter transporte
         result = self.get_transport(packages)
@@ -66,18 +65,19 @@ class AlgSemiInformed:
                     best_path = finalPath
                     best_cost = totalCost
                     best_rating = average_rating
-                    best_nodesVisited = nodesVisited
                     best_transport = transport
+                
+                order_of_visit += nodesVisited
 
         if best_cost == math.inf:
             return None
         else:
-            return (best_path,best_cost,best_rating,best_nodesVisited, best_transport)
+            return (best_path, best_cost, best_rating, order_of_visit, best_transport)
         
     def procura_informada_aux(self, graph, startPlace, startTime, packages, transport, total_weight, path_func):
 
         # lista com nodos por visitar, ordenado por proximidade de data limite
-        package_visit_order = self.calculate_heuristic_urgency(graph,packages)
+        package_visit_order = self.calculate_heuristic_urgency(packages)
 
         currTime = startTime # tempo inicial
         currVelocity = Stats.base_vel[transport] - (total_weight * Stats.vel_decr_peso[transport]) # velocidade inicial
@@ -85,7 +85,7 @@ class AlgSemiInformed:
         errorFlag = False
         finalPath = [startPlace]
         totalCost = 0
-        nodesVisited = set()
+        order_of_visit = []
         currNode = startPlace
 
         while (len(package_visit_order) > 0 and not errorFlag):
@@ -107,7 +107,7 @@ class AlgSemiInformed:
                 path.pop(0) # removemos a primeira posição do path obtido, porque já consta na lista final
                 finalPath.extend(path) # acrescentar caminho desta iteração ao caminho final
                 totalCost += distTraveled * Stats.consumo[transport] # somar C02 na deslocação desta iteração ao total
-                nodesVisited = nodesVisited.union(visited) # nodos visitados nessa iteração
+                order_of_visit += visited # nodos visitados nessa iteração
                 
                 timeBetweenDeliveries = timedelta(minutes= (distTraveled / currVelocity)) # tempo decorrido nesta iteração
                 # print(f"timeBetweenDeliveries: {timeBetweenDeliveries.total_seconds() / 60}")
@@ -128,11 +128,12 @@ class AlgSemiInformed:
             # print(f"Final CurrConsumption: {totalCost}")
             # print(f"Final CurrRatings {ratings}")
 
-            return (finalPath,totalCost, average_rating, nodesVisited)
+            return (finalPath,totalCost, average_rating, order_of_visit)
         
         return None
     
     def procura_BFS(self, graph, start, end, transport):
+        order_of_visit = []
         # definir nodos visitados para evitar ciclos
         visited = set()
         fila = Queue()
@@ -148,6 +149,7 @@ class AlgSemiInformed:
         path_found = False
         while not fila.empty() and path_found == False:
             nodo_atual = fila.get()
+            order_of_visit.append(nodo_atual) # estatísticas
             if nodo_atual == end:
                 path_found = True
             else:
@@ -169,55 +171,29 @@ class AlgSemiInformed:
             path.reverse()
             # funçao calcula custo caminho
             custo = graph.calcula_custo(path)
-            return (path, custo, visited)
+            return (path, custo, order_of_visit)
 
         return None
 
-    def procura_DFS_call(self, graph, start,end, transport, path=[], visited=set()):
+    def procura_DFS_call(self, graph, start,end, transport, order_of_visit = [], path=[], visited=set()):
         path.append(start) #caminho até ao destino
         visited.add(start) # nodos vistados
+        order_of_visit.append(start) # estatisticas
 
         if start == end: #chegou ao destino
             #calcular o custo do caminho função calcula custo
             custoT = graph.calcula_custo(path)
-            return (path,custoT, visited)
+            return (path,custoT, order_of_visit)
         
         for (adjacente, edge_attributes) in graph.getSpecificNode(start):
             (dist, is_open, vehicles) = edge_attributes
             if adjacente not in visited and is_open and transport in vehicles:
-                resultado = self.procura_DFS_call(graph, adjacente, end, transport, path, visited)
+                resultado = self.procura_DFS_call(graph, adjacente, end, transport, order_of_visit, path, visited)
                 if resultado is not None:
                     return resultado
         path.pop() # se não encontrar remover o que está no caminho
+        order_of_visit.pop()
         return None
     
     def procura_DFS(self,graph,start,end, transport):
-        return self.procura_DFS_call(graph,start,end, transport, [], set())
-    
-    
-    def procura_UCS_call(self, graph, start, end, transport, path=[], cost=0, visited=set()):
-        path.append(start)  # caminho até ao destino
-        visited.add(start)  # nodos visitados
-
-        if start == end:  # chegou ao destino
-            # calcular o custo do caminho (função calcula custo)
-            custoT = graph.calcula_custo(path)
-            return path, custoT, visited
-
-        neighbors = graph.getSpecificNode(start)
-        neighbors.sort(key=lambda x: x[1][0])  # Ordenar os nodes por custo
-
-        for (adjacente, edge_attributes) in neighbors:
-            (dist, is_open, vehicles) = edge_attributes
-            if adjacente not in visited and is_open and transport in vehicles:
-                new_cost = cost + dist
-                resultado = self.procura_UCS_call(graph, adjacente, end, transport, path, new_cost, visited)
-                if resultado is not None:
-                    return resultado
-
-        path.pop()  # se não encontrar, remover o que está no caminho
-        return None
-
-    def procura_UCS(self, graph, start, end, transport):
-        return self.procura_UCS_call(graph, start, end, transport, [], 0, set())
-
+        return self.procura_DFS_call(graph,start,end, transport, [], [], set())
