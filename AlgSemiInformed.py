@@ -1,3 +1,4 @@
+import heapq
 import math
 from queue import Queue
 from datetime import datetime, timedelta
@@ -197,3 +198,36 @@ class AlgSemiInformed:
     
     def procura_DFS(self,graph,start,end, transport):
         return self.procura_DFS_call(graph,start,end, transport, [], [], set())
+
+    import heapq
+
+    def procura_UCS_call(self, graph, start, end, transport):
+        priority_queue = [(0, start, [])]  # (cost, current_node, path)
+        visited = set()
+
+        while priority_queue:
+            cost, current_node, path = heapq.heappop(priority_queue) #seleciona o node com menor custo
+
+            if current_node in visited:
+                continue
+
+            path.append(current_node)
+            visited.add(current_node)
+
+            if current_node == end:
+                custoT = graph.calcula_custo(path)
+                return path, custoT, visited
+
+            neighbors = graph.getSpecificNode(current_node)
+
+            for (adjacent, edge_attributes) in neighbors:
+                dist, is_open, vehicles = edge_attributes
+                if adjacent not in visited and is_open and transport in vehicles:
+                    new_cost = cost + dist
+                    heapq.heappush(priority_queue, (new_cost, adjacent, path[:]))
+
+        return None
+
+
+    def procura_UCS(self, graph, start, end, transport):
+        return self.procura_UCS_call(graph, start, end, transport)

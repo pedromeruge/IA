@@ -55,6 +55,15 @@ def main():
     else:
         print("Error calculating Semi-informed DFS search") 
         
+    print("Semi-informed UCS search")
+    result = semiInformed.procura_informada(g,startPos, startTime, package_locations, semiInformed.procura_UCS)
+    if result is not None:
+        (path,custo, average_rating, nodesVisited, transport) = result
+        print (f"Custo C02 g/km: {custo}, RatingFinal: {average_rating}, NodesVisited {len(nodesVisited)}, BestTransport: {transport}")
+        # print (f"Custo C02 g/km: {custo}, RatingFinal: {average_rating}, NodesVisited {len(nodesVisited)}, BestTransport: {transport}")
+    else:
+        print("Error calculating Semi-informed UCS search") 
+        
     print("Bad informed greedy search")
     result = informed.procura_informada(g,startPos, startTime, package_locations, informed.procura_greedy)
     if result is not None:
