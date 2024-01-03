@@ -30,7 +30,7 @@ class Stats:
         'bicicleta': 10,
         'mota': 8.3333,
         'carro': 1.6666,
-        'camiao': 0.011
+        'camiao': 0.0833
     }
 
     consumo = { # g C02/m  inventado

@@ -18,7 +18,7 @@ class Parser:
     #map location -> package 
     # NOTE: package also includes location, but easier to acess like this
     def parsePackages(self):
-        csv_file_path = 'Graph/encomendas.csv'
+        csv_file_path = 'Graph/encomendas3.csv'
         df = pd.read_csv(csv_file_path)
         encomendas_map = {}
 
@@ -26,6 +26,7 @@ class Parser:
             rua = row['Rua'].strip()
             package = Package(rua,row['Peso(kg)'], row['Volume(cm^3)'], row['StartDate'].strip(), row['EndDate'].strip())
             encomendas_map[rua] = package
+        # print(f"{rua},{package}")
 
         self.m_encomendas = encomendas_map
         return encomendas_map
@@ -68,7 +69,6 @@ class Parser:
                 print(f"CHANGES: Between {node1} and {node2} open: {is_open} and vehicles {vehicles}")
 
             my_graph.add_edge(n1,n2, weight, is_open, vehicles)
-
         # print("Number of nodes:", G.number_of_nodes())
         # print("Number of edges:", G.number_of_edges())
 
@@ -142,10 +142,17 @@ class Parser:
 
             my_graph.add_edge(n1,n3, weight/2, is_open, vehicles)
             my_graph.add_edge(n3,n2, weight/2, is_open, vehicles)
-            
+
+            # if (middle_node == "Rua da Universidade"):
+            #     print(f"{node1_name, middle_node, weight/2, is_open, vehicles}") 
+            #     print(f"{middle_node, node2_name, weight/2, is_open, vehicles}")     
+
             my_graph.add_heuristica(node1_name, (x1,y1))
             my_graph.add_heuristica(node2_name, (x2,y2))
-            my_graph.add_heuristica(middle_node, (x3,y3))         
+            my_graph.add_heuristica(middle_node, (x3,y3))   
+
+            # if (middle_node == "Rua da Universidade"):
+            #     print(f"{node1_name, (x1,y1), node2_name, (x2,y2), middle_node, (x3,y3)}")      
 
         self.m_G = G
 
@@ -158,6 +165,9 @@ class Parser:
         print("Number of edges:", G.number_of_edges())
 
         print("Finished parsing")
+
+        ox.plot_graph(map_graph, node_size=0, edge_color="b", bgcolor="w", show=True)
+
         return my_graph
 
     #x and y size of window
@@ -225,7 +235,7 @@ class Parser:
         nx.draw(self.m_G, self.m_pos, with_labels=False, node_size=node_size, width=edge_width, edge_color=edge_color)
 
         # Draw nodes with labels for those whose names are not integers
-        nodes_to_label = [node for node in self.m_pos if not str(node).isdigit()]
+        nodes_to_label = [node for node in self.m_pos if not str(node).isdigit() and not "?" in str(node)]
         labels = {node: node for node in nodes_to_label}  # Label with the node name itself
         nx.draw_networkx_labels(self.m_G, self.m_pos, labels=labels, font_size=8)
 

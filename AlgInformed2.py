@@ -44,7 +44,7 @@ class AlgInformed2:
             if (currNode == package.m_location):
                 speedHeuristic = package.m_weight * Stats.vel_decr_peso[transport] # aumento de velocidade com entrega de pacote, baseado em peso do pacote
             # print(f"SpeedDiff {-20 * speedHeuristic}") # time diff in minutes
-            temp_res =  (((inTimeHeuristic + earlyHeuristic * 0.2) * self.multipliter_for_rating_function(wantedRating)) + 100 * distHeuristic - 20 * speedHeuristic) * 22
+            temp_res =  (((inTimeHeuristic + earlyHeuristic * 0.2) * self.multipliter_for_rating_function(wantedRating)) + 100 * distHeuristic - 20 * speedHeuristic) * 35
             
             #NOTA: REFERENTE À LINHA ACIMA ^^^^^^^^^^^^^^^^^^
             #NOTA : fator à direita de todo na funcao altera na aStar a importância de parte custo uniforme e parte heurística de aStar (maior valor da constante -> mais peso para heurística ->  mais rating -> mais consumo)
