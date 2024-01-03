@@ -44,7 +44,7 @@ class AlgInformed2:
             if (currNode == package.m_location):
                 speedHeuristic = package.m_weight * Stats.vel_decr_peso[transport] # aumento de velocidade com entrega de pacote, baseado em peso do pacote
 
-            temp_res =  ((inTimeHeuristic + earlyHeuristic * 0.2) + 100 * distHeuristic - 2 * speedHeuristic) * 2
+            temp_res =  ((inTimeHeuristic + earlyHeuristic * 0.2) + 100 * distHeuristic - 20 * speedHeuristic) * 2
 
             if (temp_res < final_res):
                 final_res = temp_res
